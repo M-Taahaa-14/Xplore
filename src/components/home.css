@@ -1,0 +1,218 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.hero {
+    background-image: url("/public/images/t3.jpg"); /* Corrected syntax */
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 20rem 1rem;
+}
+
+
+.hero-content {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hero h1 {
+    color:white;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.hero form {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;    
+}
+
+.hero select {
+    border-radius: 10px;
+    color: black;
+     text-align: center;
+     font-size: 1rem;
+     height: 3rem; 
+     width: 12rem; 
+     box-sizing: border-box; 
+}
+
+.hero .search-button{
+    border-radius: 10px;
+     text-align: center;
+     font-size: 1rem;
+     height: 3rem; 
+     width: 9rem; 
+     box-sizing: border-box; 
+     color: black;
+     background-color: white;
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    padding: 2rem 1rem;
+    background-color: navajowhite;
+}
+
+.feature {
+    text-align: center;
+}
+
+.help {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.help h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.help .consultants {
+    display: flex;
+    justify-content: center;
+    gap: 0.2rem;
+    margin-bottom: 1rem;
+}
+
+.help .consultants img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    gap: -0.1rem;
+}
+
+.help .contact-info {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.help .contact-info div {
+    text-align: center;
+}
+
+.help .contact-info p {
+    margin: 0.5rem 0;
+}
+
+.featured-liveaboards {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.featured-liveaboards h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.featured-liveaboards .see-more {
+    display: block;
+    margin-bottom: 1rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.featured-liveaboards .liveaboard-cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.featured-liveaboards .card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    width: 30%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.featured-liveaboards .card img {
+    width: 100%;
+    height: auto;
+}
+
+.featured-liveaboards .card h3 {
+    font-size: 1.25rem;
+    margin: 1rem 0 0.5rem;
+}
+
+.featured-liveaboards .card p {
+    margin: 0.5rem 1rem;
+}
+
+.menu {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.menu-bar {
+    width: 30px;
+    height: 6px;
+    background-color: #000;
+    margin: 4px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1001;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+.form-group {
+    display: inline-block;
+    margin-bottom: 10px;
+    text-align: left;
+    
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input,.form-group select {
+    padding: 15px;
+}
+.form-group button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.form-group button:hover {
+    background-color: #0056b3;
+}
