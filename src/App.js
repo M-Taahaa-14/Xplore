@@ -27,8 +27,8 @@ import {
 const App = () => {
   return (
     <Router>
-      <Header/> {/*for client side call this */}
-      {/* <SideBar/> for admin side call this */}
+      {/* <Header/> for client side call this */}
+      { <SideBar/> /* for admin side call this */}
       <Routes>
         <Route path="/signnew" element={<SignNew/>}/>
         <Route path="/login" element={<Login />} />
@@ -53,5 +53,3 @@ const App = () => {
 }
 
 export default App;
-
-

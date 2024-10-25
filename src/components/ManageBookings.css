@@ -8,7 +8,7 @@ body {
 }
 
 .manage-bookings .container {
-    width: 75%; /* Increase container width */
+    width: 90%; /* Increase container width */
     max-width: 1200px; /* Set max width to ensure it doesn't stretch too far */
     margin: 20px auto; /* Center the container */
     margin-left: 200px;
@@ -66,6 +66,8 @@ button.delete:hover {
 }
 
 .grid-section {
+    width: 90%;
+    margin: 40px;
     max-height: 400px; /* Set a fixed height */
     overflow-y: auto; /* Allow vertical scrolling */
     background-color: rgba(255, 255, 255, 0.9); /* Match the form section background */
