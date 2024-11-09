@@ -35,10 +35,6 @@ def signup(request):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-
-
-
-
 @api_view(['POST'])
 def login(request):
     email = request.data.get('email')
