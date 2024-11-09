@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
-  const navigate = useNavigate(); // Use the navigate function
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation
     if (!email || !password) {
       setError("Email and Password are required");
       return;
@@ -19,7 +17,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("http://127.0.0.1:8000/api/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -80,13 +78,12 @@ const Login = () => {
 
           {error && <p style={styles.error}>{error}</p>}
 
-          <p>Don't have an account? <Link to="/signup">Signup</Link></p> {/* Changed to Link */}
+          <p>Don't have an account? <Link to="/signup">Signup</Link></p>
         </div>
       </form>
     </div>
   );
 };
-
 
 // Inline CSS styles
 const styles = {
@@ -110,7 +107,6 @@ const styles = {
     backdropFilter: 'blur(10px)', // Apply a blur effect to the background
     WebkitBackdropFilter: 'blur(10px)', // Safari support
   },
-
   formGroup: {
     marginBottom: '15px',
     textAlign: 'center',
@@ -133,13 +129,6 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    '&:hover': {
-    backgroundColor: '#0056b3', // darken the button color on hover
-    },
-  },
-  
-  buttonHover: {
-    backgroundColor:'#fff',
   },
   error: {
     color: 'red',

@@ -6,8 +6,8 @@ from django.http import HttpResponse
 def root_view(request):
     return HttpResponse("Welcome to the root page!")
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),  # URL for Django admin
-    path('', include('api.urls')),  # URL for your API views
-    
+    path('api/', include('api.urls')),  # Prefix with `api/` for API routes
 ]

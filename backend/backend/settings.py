@@ -1,26 +1,23 @@
-# settings.py
-
 import os
 from pathlib import Path
 
 # Paths and directories
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security settings
 SECRET_KEY = 'your-secret-key-here'  # Replace this with a secure key
-
-# Debugging setting (use False in production)
 DEBUG = False
-
-# Hosts allowed to access the server
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # React frontend during development
+]
 
-# URL configuration module
-ROOT_URLCONF = 'backend.urls'  
+# URL configuration
+ROOT_URLCONF = 'backend.urls'
 
-# Applications installed in the project
+# Installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,32 +26,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'rest_framework',  # Django REST framework
-    'api',  # Make sure your API app is listed here
-
-
+    'rest_framework',
+    'api',  # Your API app
 ]
 
 # Middleware configuration
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
-# Templates configuration
+# Template configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR,'frontend/src'),
-        ],  # Specify directories for custom templates if any
+        'DIRS': [os.path.join(BASE_DIR, 'frontend/src')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,28 +66,22 @@ DATABASES = {
         'NAME': 'xploredb',
         'USER': 'root',
         'PASSWORD': 'Konnect!123',  # Update with your MySQL password
-        'HOST': 'localhost',  # Default to localhost; change if needed
-        'PORT': '3306',       # Default MySQL port
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',  # Your React frontend's URL during development
-]
-
-# Static files (CSS, JavaScript, Images)
+# Static and media files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # Define the path for static files
-
-# Media files (for user-uploaded files)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Django REST framework configuration (optional, if needed)
+# Django REST framework configuration
 REST_FRAMEWORK = {
-    # Define default permissions, authentication, pagination, etc.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Example: Allow all access; modify as needed
+        'rest_framework.permissions.AllowAny',  # Modify as needed
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
@@ -103,20 +89,17 @@ REST_FRAMEWORK = {
     ],
 }
 
-# WSGI and ASGI application definitions
+# WSGI application
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# Internationalization and localization settings
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files directory (useful for production settings)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Logging (optional)
+# Logging configuration (optional)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -130,5 +113,3 @@ LOGGING = {
         'level': 'DEBUG' if DEBUG else 'WARNING',
     },
 }
-
-# Additional settings can be added here as needed

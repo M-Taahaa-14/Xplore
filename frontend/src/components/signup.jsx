@@ -38,7 +38,7 @@ const Signup = () => {
     // Validate inputs
     const { name, username, phoneNum, dob, email, password, confirmPassword, gender } = formData;
 
-    if (!name || !username || !phoneNum || !dob || !email || !password || !confirmPassword) {
+    if (!name || !username || !phoneNum || !dob || !email || !password || !confirmPassword || !gender) {
       setError('All fields are required');
       return;
     }
@@ -58,11 +58,11 @@ const Signup = () => {
     setError('');
 
     // Prepare data for API call
-    const signupData = { name, username, gender, phoneNum, dob, email, password };
+    const signupData = { name, username, gender, phone_num: phoneNum, dob, email, password };
 
     // Make API call to backend
     try {
-      const response = await fetch('http://http://127.0.0.1:8000', {
+      const response = await fetch('http://127.0.0.1:8000/api/signup/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupData),
@@ -72,7 +72,7 @@ const Signup = () => {
       if (!response.ok) throw new Error(data.errors ? JSON.stringify(data.errors) : 'Signup failed');
 
       console.log('Signup successful', data);
-      // Redirect or show success message
+      // Redirect or show success message here
 
     } catch (error) {
       setError(error.message || 'An error occurred during signup');
@@ -84,29 +84,20 @@ const Signup = () => {
       <main style={styles.main}>
         <div style={styles.container}>
           <h2>Create New Account</h2>
-          <div style={styles.formGroup}>
-            <label htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Enter your name"
-              value={formData.name}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
+          
+          {['name', 'username', 'phoneNum', 'dob', 'email', 'password', 'confirmPassword'].map((field) => (
+            <div key={field} style={styles.formGroup}>
+              <label htmlFor={field}>{field.replace(/([A-Z])/g, ' $1')}</label>
+              <input
+                id={field}
+                type={field === 'password' || field === 'confirmPassword' ? 'password' : field === 'dob' ? 'date' : 'text'}
+                placeholder={`Enter your ${field}`}
+                value={formData[field]}
+                onChange={handleInputChange}
+                style={styles.input}
+              />
+            </div>
+          ))}
 
           <div style={styles.formGroup}>
             <label htmlFor="gender">Gender</label>
@@ -120,65 +111,6 @@ const Signup = () => {
               <option value="M">Male</option>
               <option value="F">Female</option>
             </select>
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="phoneNum">Phone Number</label>
-            <input
-              id="phoneNum"
-              type="tel"
-              placeholder="Enter your phone number"
-              value={formData.phoneNum}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="dob">Date of Birth</label>
-            <input
-              id="dob"
-              type="date"
-              value={formData.dob}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </div>
-
-          <div style={styles.formGroup}>
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
           </div>
 
           <button
