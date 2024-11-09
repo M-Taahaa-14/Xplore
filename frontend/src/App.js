@@ -23,6 +23,7 @@ import Review from './components/Review.jsx';
 import ContactUs from './components/ContactUs.jsx';
 import SideBar from './components/adminSideBar.jsx'; // Assuming this is for admin routes
 import TourGuide from './components/TourGuide.jsx';
+import TermsOfService from './components/TermsOfService.jsx';
 
 const App = () => {
   return (
@@ -43,7 +44,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signnew" element={<SignNew />} />
         <Route path="/tourguide" element={<TourGuide />} />
-
+        <Route path="/termsofservice" element={<TermsOfService />} />
         {/* Admin-side routes */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/managebookings" element={<ManageBookings />} />
