@@ -1,0 +1,96 @@
+/* TourGuide.css */
+.tour-guide-container {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .guide-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .guide-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .guide-details h2 {
+    margin: 0;
+    color: #2e8b57;
+  }
+  
+  .guide-details p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .reviews-container {
+    margin-bottom: 30px;
+  }
+  
+  .reviews {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  .review {
+    font-style: italic;
+    font-size: 18px;
+    max-width: 500px;
+    text-align: center;
+    margin: 0 20px;
+  }
+  
+  .arrow {
+    background-color: transparent;
+    border: none;
+    font-size: 30px;
+    color: #2e8b57;
+    cursor: pointer;
+  }
+  
+  .arrow:hover {
+    color: #45a049;
+  }
+  
+  .pricing {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tour-package {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tour-package h4 {
+    margin: 0;
+    color: #2e8b57;
+  }
+  
+  .price {
+    font-weight: bold;
+    color: #2e8b57;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
