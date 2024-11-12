@@ -1,75 +1,83 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import WeatherChart from "./WeatherChart";
+import WeatherCard from "./WeatherCard";
 import "./WeatherForecast.css";
 
-const WeatherApp = () => {
-  const [city, setCity] = useState("");
+const WeatherForecast = () => {
   const [weatherData, setWeatherData] = useState(null);
+  const [city, setCity] = useState("New York");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Function to fetch weather data from the backend API
   const fetchWeatherData = async () => {
     setLoading(true);
-    setError("");
+    setError(""); // Reset errors on new search
+    const apiKey = process.env.REACT_APP_WEATHER_API_KEY; // API Key from .env file
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
+    console.log("API URL:", url);
+    
 
-    const url = `/api/weather/?city=${encodeURIComponent(city)}`;
     try {
       const response = await axios.get(url);
-      console.log("Weather data:", response.data);
-      setWeatherData(response.data); // Store the forecast data in the state
+      setWeatherData(response.data);
     } catch (error) {
-      console.error("Error fetching weather data:", error.response?.data || error.message);
-      setError(error.response?.data?.error || "Something went wrong");
-    } finally {
+        console.error("Error fetching weather data", error.response?.data || error.message);
+      }
+       finally {
       setLoading(false);
     }
   };
-  console.log("Weather Data Structure:", weatherData);
+  
 
-  // Handle the search input
-  const handleSearch = () => {
-    if (!city.trim()) {
-      setError("City name is required");
-      return;
-    }
+  useEffect(() => {
     fetchWeatherData();
+  }, []);
+
+  const handleCityChange = (e) => setCity(e.target.value);
+
+  const handleSearch = () => {
+    if (city.trim()) fetchWeatherData();
   };
 
   return (
-    <div>
-      <h1>Weather Forecast</h1>
-      <input
-        type="text"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        placeholder="Enter city"
-      />
-      <button onClick={handleSearch}>Search</button>
-
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-
-      {weatherData && (
+    <div className="weather-forecast-container">
+      <header className="weather-header">
+        <h1>Weather Forecast</h1>
+        <div className="search-bar">
+          <input
+            type="text"
+            value={city}
+            onChange={handleCityChange}
+            placeholder="Enter city name..."
+          />
+          <button onClick={handleSearch}>Search</button>
+        </div>
+      </header>
+      {loading ? (
+        <div className="loading">Loading...</div>
+      ) : error ? (
+        <div className="error">{error}</div>
+      ) : weatherData ? (
         <div>
-          <h2>Weather Forecast for {weatherData.city_name}, {weatherData.country}</h2>
-          <div>
-            {weatherData.forecasts.map((forecast, index) => (
-              <div key={index} style={{ marginBottom: "20px" }}>
-                <h3>{new Date(forecast.date).toLocaleString()}</h3>
-                <p>Temperature: {forecast.temperature}°C</p>
-                <p>Description: {forecast.description}</p>
-                <img
-                  src={`https://openweathermap.org/img/wn/${forecast.icon}.png`}
-                  alt={forecast.description}
-                />
-              </div>
+          <div className="weather-info">
+            <h2>
+              {weatherData.city.name}, {weatherData.city.country}
+            </h2>
+            <p>{new Date().toLocaleDateString()}</p>
+          </div>
+          <div className="weather-cards">
+            {weatherData.list.slice(0, 5).map((forecast, index) => (
+              <WeatherCard key={index} forecast={forecast} />
             ))}
           </div>
+          <WeatherChart data={weatherData.list.slice(0, 5)} />
         </div>
+      ) : (
+        <p>No data available. Please search for a valid city.</p>
       )}
     </div>
   );
 };
 
-export default WeatherApp;
+export default WeatherForecast;
