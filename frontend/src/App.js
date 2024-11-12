@@ -26,6 +26,7 @@ import TourGuide from './components/TourGuide.jsx';
 import TermsOfService from './components/TermsOfService.jsx';
 import BookingPage from './components/BookingPage.jsx';
 import PaymentPage from './components/PaymentPage.jsx';
+import WeatherForecast from './components/WeatherForecast.jsx';
 
 const App = () => {
   return (
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/termsofservice" element={<TermsOfService />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/weather" element={<WeatherForecast />} />
         {/* Admin-side routes */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/managebookings" element={<ManageBookings />} />
