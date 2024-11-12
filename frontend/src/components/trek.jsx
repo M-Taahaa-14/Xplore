@@ -1,5 +1,6 @@
 import React from 'react';
 import './trek.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
 
 const Trek = () => {
     const treks = [
@@ -47,6 +48,14 @@ const Trek = () => {
         },
     ];
 
+    const navigate = useNavigate();
+
+    const handleBookNow = (trek) => {
+        navigate('/booking', {
+            state: { trekDetails: trek }, // Pass trek data via state
+        });
+    };
+
     return (
         <div>
             <main>
@@ -60,10 +69,10 @@ const Trek = () => {
                             <div className="card-content">
                                 <h3>{trek.title}</h3>
                                 <p>{trek.duration}</p>
-                                <p>{trek.price}</p>
+                                <p>{`PKR ${trek.price}`}</p>
                             </div>
                             <div className="overlay">
-                                <a href="/booking">Book Now</a>
+                                <button className="book-now-btn" onClick={() => handleBookNow(trek)}>Book Now</button>
                             </div>
                         </div>
                     ))}

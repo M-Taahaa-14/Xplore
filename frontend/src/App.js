@@ -24,6 +24,8 @@ import ContactUs from './components/ContactUs.jsx';
 import SideBar from './components/adminSideBar.jsx'; // Assuming this is for admin routes
 import TourGuide from './components/TourGuide.jsx';
 import TermsOfService from './components/TermsOfService.jsx';
+import BookingPage from './components/BookingPage.jsx';
+import PaymentPage from './components/PaymentPage.jsx';
 
 const App = () => {
   return (
@@ -45,6 +47,8 @@ const App = () => {
         <Route path="/signnew" element={<SignNew />} />
         <Route path="/tourguide" element={<TourGuide />} />
         <Route path="/termsofservice" element={<TermsOfService />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
         {/* Admin-side routes */}
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/managebookings" element={<ManageBookings />} />
