@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from decouple import config
 
 # Paths and directories
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,6 +18,12 @@ CORS_ALLOWED_ORIGINS = [
 # URL configuration
 ROOT_URLCONF = 'backend.urls'
 
+AUTH_USER_MODEL = 'api.User'
+
+OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default=None)
+print("Loaded API Key:", OPENWEATHER_API_KEY)
+
+
 # Installed applications
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'api',  # Your API app
 ]
 
@@ -34,13 +42,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 # Template configuration
 TEMPLATES = [

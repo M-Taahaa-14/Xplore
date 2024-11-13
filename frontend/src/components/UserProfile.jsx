@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./UserProfile.css"; // Create a CSS file for styling.
+import "./UserProfile.css"; 
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState({});
@@ -13,11 +13,18 @@ const UserProfile = () => {
   }, []);
 
   const fetchUserProfile = async () => {
-    // Mock API call. Replace with real API endpoint.
-    const response = await fetch("/api/user-profile");
+    const response = await fetch("/api/user-profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // Or use another method for token storage
+      },
+    });
     const data = await response.json();
     setUserProfile(data);
   };
+  
+
 
   const fetchUserBookings = async () => {
     // Mock API call. Replace with real API endpoint.

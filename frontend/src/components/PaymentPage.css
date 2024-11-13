@@ -1,0 +1,45 @@
+.payment-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+  }
+  
+  .payment-title {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #ffffff;
+  }
+  
+  .payment-card {
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    width: 90%;
+    max-width: 400px;
+  }
+  
+  .pay-btn {
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .pay-btn:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+  }
+  
+  h2, p {
+    margin: 10px 0;
+  }
+  
