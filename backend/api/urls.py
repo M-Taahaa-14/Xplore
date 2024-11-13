@@ -4,5 +4,5 @@ from .views import signup, login
 
 urlpatterns = [
     path('signup/', signup),
-    path('login/', login),  # New login endpoint
+    path('login/', login),  
 ]
