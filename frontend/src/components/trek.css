@@ -1,0 +1,92 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.heading {
+    text-align: center;
+    font-size: larger;
+}
+.trek-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 1rem;
+}
+.card {
+    position: relative;
+    width: 30%;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.card img {
+    width: 100%;
+    height: auto;
+}
+.card-content {
+    padding: 1rem;
+}
+.card-content h3 {
+    margin: 0.5rem 0;
+}
+.card-content p {
+    margin: 0.5rem 0;
+}
+.card:hover .overlay {
+    opacity: 0.8;
+}
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.overlay a {
+    color: white;
+    background-color: #007bff;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.overlay a:hover {
+    background-color: #13b570;
+}
+
+.book-now-btn {
+    background-color: #2d572c; /* Dark green background */
+    color: white; /* White text */
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.book-now-btn:hover {
+    background-color: #3c8d40; /* Slightly lighter green on hover */
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.book-now-btn:focus {
+    outline: none;
+}
+
+.book-now-btn:active {
+    background-color: #2c6b31; /* Darker green when clicked */
+}

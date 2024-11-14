@@ -1,0 +1,136 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.manage-bookings .container {
+    width: 90%; /* Increase container width */
+    max-width: 1200px; /* Set max width to ensure it doesn't stretch too far */
+    margin: 20px auto; /* Center the container */
+    margin-left: 200px;
+    background: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-section, .grid-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: rgba(233, 233, 233, 0.8);
+    border-radius: 5px;
+}
+
+input[type="text"], input[type="date"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    box-sizing: border-box; /* Ensure padding doesn't overflow */
+}
+
+button.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button.btn:hover {
+    background-color: #45a049;
+}
+
+button.delete {
+    background-color: #f44336;
+}
+
+button.delete:hover {
+    background-color: #e57373;
+}
+
+.content {
+    margin-left: 60px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.grid-section {
+    width: 90%;
+    margin: 40px;
+    max-height: 400px; /* Set a fixed height */
+    overflow-y: auto; /* Allow vertical scrolling */
+    background-color: rgba(255, 255, 255, 0.9); /* Match the form section background */
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap; /* Prevent text from wrapping in cells */
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+table td button {
+    margin: 5px 0; /* Add margin to buttons to ensure they don't overflow */
+    padding: 6px 10px;
+}
+
+@media (max-width: 768px) {
+    /* Adjust form layout for mobile screens */
+    .manage-bookings .container {
+        width: 95%; /* Take more screen width on mobile */
+        margin-left: 10px; /* Reduce margin */
+        margin-right: 10px;
+    }
+
+    .form-section, .grid-section {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    button.btn {
+        width: 100%; /* Buttons take full width on smaller screens */
+    }
+
+    input[type="text"], input[type="date"] {
+        width: 100%;
+    }
+
+    table {
+        font-size: 14px; /* Reduce font size for better readability */
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    table th, table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+}

@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.content {
+    margin-left: 200px; 
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.container {
+    background: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    width: 100%; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.metrics {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 5px;
+}
+
+.section-header {
+    color: #555;
+}
+
+.metric-cards {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+}
+
+.metric-card {
+    flex: 1;
+    min-width: 20%; /* Ensures three cards fit in a row */
+    background-color: #dfe6e9;
+    padding: 30px auto;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 20px; /* Adds space between rows */
+}
+
+.metric-card h3 {
+    margin: 10px 0;
+    color: #333;
+}
+
+h4 {
+    margin: 20px 0;
+    color: #fff;
+    font-size: 24px;
+    text-align: center; /* Center the text */
+}
+
+.metric-card p {
+    font-size: 24px;
+    color: #555;
+}

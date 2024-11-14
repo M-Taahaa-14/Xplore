@@ -1,0 +1,86 @@
+/* Main container styling */
+.container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header styling */
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .header .text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .header .underline {
+    width: 50px;
+    height: 3px;
+    background-color: #007bff;
+    margin: 10px auto 0;
+  }
+  
+  /* Inputs container styling */
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Individual input field styling */
+  .input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input img {
+    margin-right: 10px;
+    width: 24px;
+    height: auto;
+  }
+  
+  .input input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .input input::placeholder {
+    color: #999;
+  }
+  
+  /* Media queries for responsive design */
+  @media (max-width: 576px) {
+    .container {
+      max-width: 100%;
+      padding: 15px;
+    }
+  
+    .header .text {
+      font-size: 20px;
+    }
+  
+    .inputs {
+      gap: 10px;
+    }
+  
+    .input {
+      padding: 8px;
+    }
+  }
+  
