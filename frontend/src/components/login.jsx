@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check if both fields are filled
     if (!email || !password) {
       setError("Email and Password are required");
       return;
@@ -17,28 +19,25 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+        email,
+        password,
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Login successful:", data);
-        navigate('/home'); // Redirect to home after successful login
-      } else {
-        setError(data.error || "Login failed");
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);
+        navigate('/home'); // Redirect to home page after successful login
       }
     } catch (error) {
-      setError("An error occurred. Please try again.");
-      console.error(error);
+      // Set the error message from server response or a default error
+      setError(error.response?.data?.error || "Login failed. Please check your credentials.");
+      console.error("Login error:", error);
     }
   };
 
   return (
     <div style={styles.body}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} style={styles.form}>
         <div style={styles.container}>
           <h2>Login to Xplore</h2>
 

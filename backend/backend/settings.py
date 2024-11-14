@@ -9,10 +9,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'your-secret-key-here'  # Replace this with a secure key
 DEBUG = False
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ALLOW_ALL_ORIGINS = True  # For testing purposes, but consider disabling in production.
+CORS_ALLOW_CREDENTIALS = True  # If you want to send cookies in the requests
+
+AUTH_USER_MODEL = 'api.User'
+
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # React frontend during development
+    'http://127.0.0.1:8000',  # Backend URL
 ]
 
 # URL configuration
@@ -40,6 +46,7 @@ INSTALLED_APPS = [
 
 # Middleware configuration
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +92,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Django REST framework configuration
 REST_FRAMEWORK = {

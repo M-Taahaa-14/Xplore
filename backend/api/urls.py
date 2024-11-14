@@ -1,15 +1,10 @@
-# backend/api/urls.py
-
 from django.urls import path
-from .views import signup, login, user_profile, WeatherForecastView
+from .views import signup, login, UserProfileView, WeatherForecastView, get_weather
 
 urlpatterns = [
-    path('signup/', signup),
-<<<<<<< HEAD
-    path('login/', login),  
-=======
+    path('signup', signup),
     path('login/', login),
-    path('user-profile/', user_profile),  # New endpoint for user profile
-    path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
->>>>>>> 1e2973fcbfd6be9545f9f536e1b01447c9effb71
+    path('user-profile', UserProfileView.as_view()),  # Secured with authentication
+    path('weather', WeatherForecastView.as_view(), name='weather-forecast'),
+    path('get-weather', get_weather),  # A simpler version of weather API
 ]

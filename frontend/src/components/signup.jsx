@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Signup = () => {
-  // State for form inputs
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -15,13 +15,11 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [isHovered, setIsHovered] = useState(false);
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  // Helper function to calculate age based on date of birth
   const calculateAge = (dob) => {
     const birthDate = new Date(dob);
     const today = new Date();
@@ -33,9 +31,7 @@ const Signup = () => {
     return age;
   };
 
-  // Handle submission logic
   const handleSubmit = async () => {
-    // Validate inputs
     const { name, username, phoneNum, dob, email, password, confirmPassword, gender } = formData;
 
     if (!name || !username || !phoneNum || !dob || !email || !password || !confirmPassword || !gender) {
@@ -54,29 +50,31 @@ const Signup = () => {
       return;
     }
 
-    // Clear errors and proceed
     setError('');
 
-    // Prepare data for API call
     const signupData = { name, username, gender, phone_num: phoneNum, dob, email, password };
 
-    // Make API call to backend
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/signup/', {
-        method: 'POST',
+      const response = await axios.post('http://127.0.0.1:8000/api/signup', signupData, {
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(signupData),
       });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.errors ? JSON.stringify(data.errors) : 'Signup failed');
-
-      console.log('Signup successful', data);
+    
+      console.log('Signup successful', response.data);
       // Redirect or show success message here
-
     } catch (error) {
-      setError(error.message || 'An error occurred during signup');
+      const errorMsg = error.response?.data?.errors;
+    
+      if (typeof errorMsg === 'string') {
+        setError(errorMsg);
+      } else if (typeof errorMsg === 'object') {
+        // If it's an object, map through its keys to display each error message
+        const messages = Object.values(errorMsg).flat().join(', ');
+        setError(messages);
+      } else {
+        setError('An error occurred during signup');
+      }
     }
+    
   };
 
   return (

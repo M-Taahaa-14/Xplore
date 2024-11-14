@@ -16,7 +16,6 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -24,7 +23,6 @@
     "eject": "react-scripts eject"
   },
   "proxy": "https://api.openweathermap.org",
-
   "eslintConfig": {
     "extends": [
       "react-app",
