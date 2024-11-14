@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'xploredb',
         'USER': 'root',
-        'PASSWORD': '786_Jhang',  # Update with your MySQL password
+        'PASSWORD': 'Konnect!123',  # Update with your MySQL password
         'HOST': 'localhost',
         'PORT': '3306',
     }
