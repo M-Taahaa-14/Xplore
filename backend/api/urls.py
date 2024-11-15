@@ -4,7 +4,7 @@ from .views import signup, login, UserProfileView, WeatherForecastView, get_weat
 urlpatterns = [
     path('signup', signup),
     path('login/', login),
-    path('user-profile', UserProfileView.as_view()),  # Secured with authentication
-    path('weather', WeatherForecastView.as_view(), name='weather-forecast'),
-    path('get-weather', get_weather),  # A simpler version of weather API
+    path('user-profile/', UserProfileView.as_view()),  # Secured with authentication
+    path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
+    path('get-weather/', get_weather),  # A simpler version of weather API
 ]

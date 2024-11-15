@@ -1,34 +1,28 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
-import "./WeatherChart.css";
 
-const WeatherChart = ({ data }) => {
-  if (!data || data.length === 0) return null; // Ensure data is valid
-
-  const chartData = {
-    labels: data.map((forecast) =>
-      new Date(forecast.dt * 1000).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    ),
-    datasets: [
-      {
-        label: "Temperature (°C)",
-        data: data.map((forecast) => forecast.main.temp),
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 2,
-      },
-    ],
-  };
+const WeatherCard = ({ forecast }) => {
+  // Destructure with default values and optional chaining to avoid errors
+  const { 
+    dt, // timestamp of forecast data
+    main: { temp = 'N/A' } = {}, // Default temp to 'N/A' if `main` is undefined
+    weather: [{ description = 'No description available', icon = '01d' }] = [] 
+  } = forecast || {}; // Default `forecast` to an empty object if undefined
 
   return (
-    <div className="weather-chart">
-      <h3>Temperature Trends</h3>
-      <Line data={chartData} />
+    <div className="weather-card">
+      <h3>{new Date(dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</h3>
+      <div className="weather-icon">
+        <img
+          src={`http://openweathermap.org/img/wn/${icon}.png`} // Assuming this is the icon URL structure
+          alt={description}
+        />
+      </div>
+      <div className="weather-info">
+        <p>{description}</p>
+        <p>{temp} °C</p>
+      </div>
     </div>
   );
 };
 
-export default WeatherChart;
+export default WeatherCard;
