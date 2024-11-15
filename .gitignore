@@ -38,12 +38,6 @@ __pycache__/
 *.min.js
 *.bundle.js
 
-# Images
-*.jpg
-*.jpeg
-*.png
-*.gif
-
 # Other common build output
 /dist
 /tmp
