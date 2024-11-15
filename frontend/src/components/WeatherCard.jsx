@@ -1,20 +1,22 @@
 import React from "react";
-import "./WeatherCard.css";
+import "./WeatherForecast.css";
 
 const WeatherCard = ({ forecast }) => {
-  const date = new Date(forecast.dt * 1000).toLocaleDateString();
-  const { temp } = forecast.main;
-  const { icon, description } = forecast.weather[0];
+  const time = new Date(forecast.dt * 1000).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   return (
     <div className="weather-card">
-      <p>{date}</p>
+      <p className="card-time">{time}</p>
       <img
-        src={`https://openweathermap.org/img/wn/${icon}@2x.png`}
-        alt={description}
+        src={`http://openweathermap.org/img/wn/${forecast.icon}@2x.png`}
+        alt={forecast.description}
+        className="weather-icon"
       />
-      <p>{description}</p>
-      <p>Temp: {temp}°C</p>
+      <p className="weather-description">{forecast.description}</p>
+      <p className="temperature">{forecast.temperature}°C</p>
     </div>
   );
 };

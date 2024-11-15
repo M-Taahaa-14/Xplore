@@ -1,28 +1,57 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
+# Node.js dependencies
 /node_modules
 node_modules/
-/.pnp
+
+# Yarn dependencies
+.pnp
 .pnp.js
 
-# testing
+# Testing coverage
 /coverage
 
-# production
+# Production build files
 /build
 
-# misc
+# System files
 .DS_Store
+
+# Environment files
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-
+# Python cache files
 *.pyc
 __pycache__/
+
+# Ignoring common file types
+# SVG files
+*.svg
+
+# JavaScript files (if you don’t want to track certain JS files, e.g., bundled or minified)
+*.min.js
+*.bundle.js
+
+# Images
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Other common build output
+/dist
+/tmp
+/cache
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Ignore log files
+*.log

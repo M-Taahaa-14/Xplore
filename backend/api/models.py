@@ -41,3 +41,55 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class Destination(models.Model):
+    DestinationId = models.IntegerField(primary_key=True)
+    Name = models.CharField(max_length=100)
+    Region = models.CharField(max_length=100)
+    Location = models.CharField(max_length=100)
+
+class Tour(models.Model):
+    TourId = models.IntegerField(primary_key=True)
+    TourName = models.CharField(max_length=100)
+    Destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
+    Price = models.DecimalField(max_digits=10, decimal_places=2)
+    MaxTravellers = models.IntegerField()
+    StartDate = models.DateField()
+    EndDate = models.DateField()
+    Nights = models.IntegerField()
+    Days = models.IntegerField()
+
+class Booking(models.Model):
+    BookingId = models.IntegerField(primary_key=True)
+    User = models.CharField(max_length=100)
+    Tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+    Departure = models.CharField(max_length=100)
+    BookingDate = models.DateField(auto_now_add=True)
+    TravelDate = models.DateField()
+    Status = models.CharField(max_length=20, default='Pending')
+
+# class Destination(models.Model):
+#     DestinationId = models.IntegerField(primary_key=True)
+#     Name = models.CharField(max_length=100)
+#     Region = models.CharField(max_length=100)
+#     Location = models.CharField(max_length=100)
+
+# class Tour(models.Model):
+#     TourId = models.IntegerField(primary_key=True)
+#     TourName = models.CharField(max_length=100)
+#     Destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
+#     Price = models.DecimalField(max_digits=10, decimal_places=2)
+#     MaxTravellers = models.IntegerField()
+#     StartDate = models.DateField()
+#     EndDate = models.DateField()
+#     Nights = models.IntegerField()
+#     Days = models.IntegerField()
+
+# class Booking(models.Model):
+#     BookingId = models.IntegerField(primary_key=True)
+#     User = models.CharField(max_length=100)
+#     Tour = models.ForeignKey(Tour, on_delete=models.CASCADE)
+#     Departure = models.CharField(max_length=100)
+#     BookingDate = models.DateField()
+#     TravelDate = models.DateField()
+#     Status = models.CharField(max_length=20, default='Pending')

@@ -6,8 +6,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
-SECRET_KEY = 'your-secret-key-here'  # Replace this with a secure key
-DEBUG = False
+SECRET_KEY = 'Konnect!123'  # Replace this with a secure key
+DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 CORS_ALLOW_ALL_ORIGINS = True  # For testing purposes, but consider disabling in production.
 CORS_ALLOW_CREDENTIALS = True  # If you want to send cookies in the requests
@@ -27,7 +27,6 @@ ROOT_URLCONF = 'backend.urls'
 AUTH_USER_MODEL = 'api.User'
 
 OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default=None)
-print("Loaded API Key:", OPENWEATHER_API_KEY)
 
 
 # Installed applications

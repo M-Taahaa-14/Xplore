@@ -3,13 +3,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+from rest_framework import viewsets, status
 from django.contrib.auth.hashers import make_password, check_password
-from .models import User
-from .serializers import UserSerializer
+from .models import User,Destination, Tour, Booking
+from .serializers import UserSerializer,DestinationSerializer, TourSerializer, BookingSerializer
 import requests
 from django.conf import settings
-
 
 # Signup view
 @api_view(['POST'])
@@ -127,3 +126,101 @@ def get_weather(request):
 
     except requests.exceptions.RequestException as e:
         return JsonResponse({'error': str(e)}, status=500)
+
+
+# class BookingViewSet(viewsets.ModelViewSet):
+#     queryset = Booking.objects.all()
+#     serializer_class = BookingSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         tour_id = request.data.get('Tour')
+#         tour = Tour.objects.get(pk=tour_id)
+#         request.data['TravelDate'] = tour.StartDate
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_create(serializer)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class BookingViewSet(viewsets.ModelViewSet):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Get the tour_id from the request data
+        tour_id = request.data.get('Tour')
+
+        # Retrieve the tour object using the tour_id
+        try:
+            tour = Tour.objects.get(pk=tour_id)
+        except Tour.DoesNotExist:
+            return Response({"error": "Tour not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        # Make a mutable copy of request.data and add the TravelDate
+        data = request.data.copy()
+        data['TravelDate'] = tour.StartDate
+
+        # Create the serializer with the updated data
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+
+        # Perform the creation of the booking
+        self.perform_create(serializer)
+
+        # Get the headers for the success response
+        headers = self.get_success_headers(serializer.data)
+
+        # Return the response with the created booking data
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save(Status='Pending')
+
+    def confirm_booking(self, request, pk):
+        booking = self.get_object()
+        booking.Status = 'Confirmed'
+        booking.save()
+        return Response(BookingSerializer(booking).data)
+
+    def cancel_booking(self, request, pk):
+        booking = self.get_object()
+        booking.Status = 'Canceled'
+        booking.save()
+        return Response(BookingSerializer(booking).data)
+
+class DestinationViewSet(viewsets.ModelViewSet):
+    queryset = Destination.objects.all()
+    serializer_class = DestinationSerializer
+
+class TourViewSet(viewsets.ModelViewSet):
+    queryset = Tour.objects.all()
+    serializer_class = TourSerializer
+
+# class BookingViewSet(viewsets.ModelViewSet):
+#     queryset = Booking.objects.all()
+#     serializer_class = BookingSerializer
+
+#     def create(self, request, *args, **kwargs):
+#         tour_id = request.data.get('Tour')
+#         tour = Tour.objects.get(pk=tour_id)
+#         request.data['TravelDate'] = tour.StartDate
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         self.perform_create(serializer)
+#         headers = self.get_success_headers(serializer.data)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+#     def perform_create(self, serializer):
+#         serializer.save(Status='Pending')
+
+#     def confirm_booking(self, request, pk):
+#         booking = self.get_object()
+#         booking.Status = 'Confirmed'
+#         booking.save()
+#         return Response(BookingSerializer(booking).data)
+
+#     def cancel_booking(self, request, pk):
+#         booking = self.get_object()
+#         booking.Status = 'Canceled'
+#         booking.save()
+#         return Response(BookingSerializer(booking).data)
