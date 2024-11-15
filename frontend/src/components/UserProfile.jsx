@@ -1,43 +1,69 @@
 import React, { useEffect, useState } from "react";
-import "./UserProfile.css"; 
+import "./UserProfile.css";
+
+
+const calculateAge = (dob) => {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+};
 
 const UserProfile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [bookings, setBookings] = useState([]);
   const [wishlist, setWishlist] = useState([]);
 
-  useEffect(() => {
-    fetchUserProfile();
-    fetchUserBookings();
-    fetchUserWishlist();
-  }, []);
+  // Retrieve the stored email from localStorage
+  const loggedInEmail = localStorage.getItem('userEmail');
 
-  const fetchUserProfile = async () => {
-    const response = await fetch("/api/user-profile", {
+  useEffect(() => {
+    if (loggedInEmail) {
+      fetchUserProfile(loggedInEmail);
+      fetchUserBookings(loggedInEmail);
+      fetchUserWishlist(loggedInEmail);
+    }
+  }, [loggedInEmail]);
+
+  const fetchUserProfile = async (email) => {
+    const response = await fetch(`http://127.0.0.1:8000/api/user-profile/?email=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`, // Or use another method for token storage
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
-    const data = await response.json();
-    setUserProfile(data);
-  };
-  
 
-
-  const fetchUserBookings = async () => {
-    // Mock API call. Replace with real API endpoint.
-    const response = await fetch("/api/bookings");
-    const data = await response.json();
-    setBookings(data);
+    if (response.ok) {
+      const data = await response.json();
+      setUserProfile(data.user); // Adjusted to access the 'user' field
+    } else {
+      console.error("Failed to fetch user profile");
+    }
   };
 
-  const fetchUserWishlist = async () => {
-    // Mock API call. Replace with real API endpoint.
-    const response = await fetch("/api/wishlist");
-    const data = await response.json();
-    setWishlist(data);
+  const fetchUserBookings = async (email) => {
+    const response = await fetch(`/api/bookings?email=${email}`);
+    if (response.ok) {
+      const data = await response.json();
+      setBookings(data); // Store the bookings data
+    } else {
+      console.error("Failed to fetch bookings");
+    }
+  };
+
+  const fetchUserWishlist = async (email) => {
+    const response = await fetch(`/api/wishlist?email=${email}`);
+    if (response.ok) {
+      const data = await response.json();
+      setWishlist(data); // Store the wishlist data
+    } else {
+      console.error("Failed to fetch wishlist");
+    }
   };
 
   return (
@@ -51,17 +77,18 @@ const UserProfile = () => {
         <a href="login.jsx" className="logout">🔓 Logout</a>
       </div>
       <div className="container">
-
         <h2>User Dashboard</h2>
 
         <section className="profile">
           <h3>Profile</h3>
-          <p>Full Name: {userProfile.fullName}</p>
-          <p>Email: {userProfile.email}</p>
-          <p>Date of Birth: {userProfile.dob}</p>
-          <p>Age: {userProfile.age}</p>
-          <p>Phone Number: {userProfile.phoneNumber}</p>
-          <p>Gender: {userProfile.gender}</p>
+          <p>Full Name: {userProfile.Name}</p> {/* Adjusted to display 'Name' */}
+          <p>Username: {userProfile.username}</p> {/* Adjusted to display 'Name' */}
+          <p>Email: {loggedInEmail}</p> {/* Display the email from localStorage */}
+          <p>Date of Birth: {userProfile['DOB']}</p> {/* Display Date of Birth */}
+          <p>Age: {calculateAge(userProfile['DOB'])}</p>
+
+          <p>Phone Number: {userProfile['Phone-Number']}</p> {/* Display Phone Number */}
+          <p>Gender: {userProfile.Gender}</p> {/* Display Gender */}
           <button className="btn" onClick={() => alert('Edit Profile Clicked')}>Edit Profile</button>
         </section>
 

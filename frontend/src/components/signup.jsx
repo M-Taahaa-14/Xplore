@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  
+  const navigate = useNavigate(); // Initialize navigate hook
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -55,12 +58,15 @@ const Signup = () => {
     const signupData = { name, username, gender, phone_num: phoneNum, dob, email, password };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/signup', signupData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/signup/', signupData, {
         headers: { 'Content-Type': 'application/json' },
       });
     
       console.log('Signup successful', response.data);
-      // Redirect or show success message here
+      
+      // Redirect to login page upon successful signup
+      navigate('/login');
+      
     } catch (error) {
       const errorMsg = error.response?.data?.errors;
     
@@ -74,7 +80,6 @@ const Signup = () => {
         setError('An error occurred during signup');
       }
     }
-    
   };
 
   return (
@@ -129,7 +134,6 @@ const Signup = () => {
   );
 };
 
-// Inline CSS styles
 const styles = {
   page: {
     display: 'flex',

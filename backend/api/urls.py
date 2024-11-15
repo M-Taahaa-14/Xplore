@@ -8,7 +8,8 @@ from .views import (
     get_weather,
     DestinationViewSet,
     TourViewSet,
-    BookingViewSet
+    BookingViewSet,
+    get_user_by_email
 )
 
 # Create a router and register viewsets
@@ -19,11 +20,11 @@ router.register(r'bookings', BookingViewSet, basename='booking')
 
 # Define urlpatterns
 urlpatterns = [
-    path('signup', signup),
+    path('signup/', signup),
     path('login/', login),
-    path('user-profile/', UserProfileView.as_view()),  # Secured with authentication
+    path('user-profile/', get_user_by_email),  # Secured with authentication
     path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
-    path('get-weather/', get_weather),  # A simpler version of weather API
+    path('get-weather/', get_weather),
 
     # Include routes managed by the router
     path('', include(router.urls)),

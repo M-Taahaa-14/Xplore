@@ -196,6 +196,28 @@ class TourViewSet(viewsets.ModelViewSet):
     queryset = Tour.objects.all()
     serializer_class = TourSerializer
 
+@api_view(['GET'])
+def get_user_by_email(request):
+    email = request.GET.get('email')
+    if not email:
+        return JsonResponse({'error': 'Email is required'}, status=400)
+
+    try:
+        user = User.objects.get(email=email)
+        # Customize the data to include related information
+        user_data = {
+            'Name' : user.name,
+            'username': user.username,
+            'email': user.email,
+            'DOB': (user.dob),
+            'Phone-Number': user.phone_num,
+            'Gender':user.gender ,
+
+        }
+        return JsonResponse({'user': user_data}, status=200)
+    except User.DoesNotExist:
+        return JsonResponse({'error': 'User not found'}, status=404)
+
 # class BookingViewSet(viewsets.ModelViewSet):
 #     queryset = Booking.objects.all()
 #     serializer_class = BookingSerializer

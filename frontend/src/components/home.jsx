@@ -30,7 +30,14 @@ const Home = () => {
       </div>
 
       <div className="dropdown-menu" id="dropdownMenu">
-        <a href="/login">Logout</a>
+        <button
+          onClick={() => {
+            localStorage.removeItem('userEmail'); // Clear session
+            window.location.href = '/login'; // Redirect to login
+          }}
+        >
+          Logout
+        </button>
       </div>
 
       <main>

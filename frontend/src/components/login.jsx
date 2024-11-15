@@ -26,7 +26,12 @@ const Login = () => {
 
       if (response.status === 200) {
         console.log("Login successful:", response.data);
-        navigate('/home'); // Redirect to home page after successful login
+
+        // Store email in localStorage for session management
+        localStorage.setItem('userEmail', email);
+
+        // Redirect to home page after successful login
+        navigate('/home');
       }
     } catch (error) {
       // Set the error message from server response or a default error
