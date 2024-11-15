@@ -11,7 +11,7 @@ const BookingPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    numberOfPeople: parseInt(formData.numberOfPeople, 10),
+    numberOfPeople: 1,
     specialRequests: ''
   });
 
