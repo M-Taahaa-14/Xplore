@@ -7,8 +7,9 @@ body, html {
   header {
     background-color: #333;
     padding: 1rem;
+    position: relative;
   }
-  
+
   nav ul {
     display: flex;
     justify-content: space-between;
@@ -131,5 +132,41 @@ body, html {
   
   button:hover {
     background-color: #0056b3;
+  }
+
+  .menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+  }
+  
+  .menu-bar {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 100;
+  }
+  
+  .dropdown-menu a {
+    display: block;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .dropdown-menu a:hover {
+    background-color: #f0f0f0;
   }
   

@@ -11,7 +11,7 @@ const BookingPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    numberOfPeople: 1,
+    numberOfPeople: parseInt(formData.numberOfPeople, 10),
     specialRequests: ''
   });
 
@@ -23,9 +23,10 @@ const BookingPage = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: name === 'numberOfPeople' ? parseInt(value, 10) : value, // Convert to number if field is numberOfPeople
     }));
   };
+  
 
   const handleBooking = (e) => {
     e.preventDefault();
@@ -45,7 +46,7 @@ const BookingPage = () => {
       state: {
         title,
         location,
-        price,
+        price: parseFloat(price),
         image
       }
     });
@@ -54,9 +55,9 @@ const BookingPage = () => {
   return (
     <div className="booking-page" style={{ backgroundImage: `url(${image})` }}>
       <div className="form-overlay">
-        <h1>Booking Details for {title}</h1>
+        <h2>Booking Details for</h2>
         <div className="tour-info">
-          <h2>{title}</h2>
+          <h3>{title}</h3>
           <p>{location}</p>
           <p>Price: {price} / day</p>
         </div>

@@ -11,9 +11,13 @@
     color: white;  /* Text color, adjust as needed */
   }
   
+  .form-overlay h2{
+    color: white;
+  }
   .form-overlay {
     background-color: rgba(0, 0, 0, 0.6); /* Dark overlay for better text visibility */
     padding: 20px;
+    padding-top: 0px;
     border-radius: 8px;
     width: 100%;
     max-width: 600px;
@@ -62,13 +66,9 @@
     background-color: #28a745;  /* Darker green on hover */
   }
   
-  .tour-info h2,
-  .tour-info h1 {
-    color: white;  /* White color for headings */
-    margin: 0;
-  }
-  
   .tour-info p {
     margin: 5px 0;
   }
+
+
   

@@ -68,24 +68,26 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <nav>
-        <ul>
-          <li><Link to="/home" className="nav-link">Home</Link></li>
-          <li><Link to="/tours" className="nav-link">Tours</Link></li>
-          <li><Link to="/trek" className="nav-link">Treks</Link></li>
-          <li><Link to="/faqs" className="nav-link">FAQs</Link></li>
-          <li><Link to="/userprofile" className="nav-link">Profile</Link></li>
-          <li><Link to="/aboutus" className="nav-link">About Us</Link></li>
-          <li className="chat-button" onClick={toggleChatScreen}>
-            <i className="fa fa-comments"></i> Chat
-          </li>
-        </ul>
-      </nav>
 
-      {/* Show Chat Screen if chatVisible is true */}
-      {chatVisible && <ChatScreen closeChat={() => setChatVisible(false)} />}
-    </header>
+      <header>
+        <nav>
+
+          <ul>
+            <li><Link to="/home" className="nav-link">Home</Link></li>
+            <li><Link to="/tours" className="nav-link">Tours</Link></li>
+            <li><Link to="/trek" className="nav-link">Treks</Link></li>
+            <li><Link to="/faqs" className="nav-link">FAQs</Link></li>
+            <li><Link to="/userprofile" className="nav-link">Profile</Link></li>
+            <li><Link to="/aboutus" className="nav-link">About Us</Link></li>
+            <li className="chat-button" onClick={toggleChatScreen}>
+              <i className="fa fa-comments"></i> Chat
+            </li>
+          </ul>
+        </nav>
+
+        {/* Show Chat Screen if chatVisible is true */}
+        {chatVisible && <ChatScreen closeChat={() => setChatVisible(false)} />}
+      </header>      
   );
 };
 

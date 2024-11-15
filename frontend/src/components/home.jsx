@@ -22,11 +22,13 @@ const Home = () => {
 
   return (
     <div>
+      {/* this should be in header.jsx and in header section in it */}
       <div className="menu" onClick={toggleMenu}>
         <div className="menu-bar"></div>
         <div className="menu-bar"></div>
         <div className="menu-bar"></div>
       </div>
+
       <div className="dropdown-menu" id="dropdownMenu">
         <a href="/login">Logout</a>
       </div>
@@ -137,9 +139,9 @@ const Home = () => {
   );
 };
 
+
 const toggleMenu = () => {
   const menu = document.getElementById("dropdownMenu");
   menu.style.display = menu.style.display === "block" ? "none" : "block";
 };
-
 export default Home;

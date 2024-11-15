@@ -23,6 +23,10 @@
     width: 90%;
     max-width: 400px;
   }
+
+  .payment-card h2{
+    color: #ffff;
+  }
   
   .pay-btn {
     background-color: #4CAF50; /* Green button */

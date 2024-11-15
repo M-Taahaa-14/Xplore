@@ -13,13 +13,17 @@ const PaymentPage = () => {
     if (storedDetails) {
       const parsedDetails = JSON.parse(storedDetails);
       setBookingDetails(parsedDetails);
-
+  
+      // Ensure price and numTickets are treated as numbers
       if (location.state?.price) {
-        const calculatedPrice = location.state.price * parsedDetails.numTickets;
+        const pricePerTicket = parseFloat(location.state.price);
+        const numTickets = parseInt(parsedDetails.numTickets, 10); // Explicitly convert to number
+        const calculatedPrice = pricePerTicket * numTickets;
         setTotalPrice(calculatedPrice);
       }
     }
   }, [location.state]);
+  
 
   const handlePayment = () => {
     if (totalPrice > 0) {

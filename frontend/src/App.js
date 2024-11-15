@@ -31,8 +31,8 @@ import WeatherForecast from './components/WeatherForecast.jsx';
 const App = () => {
   return (
     <Router>
-      <Header /> {/* Header for both client and admin */}
-
+      <Header /> {/* Header for both client */}
+      {/* <SideBar/> */}
       <Routes>
         {/* Client-side routes */}
         <Route path="/home" element={<Home />} />
