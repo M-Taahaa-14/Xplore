@@ -59,8 +59,6 @@ class Tour(models.Model):
     Nights = models.IntegerField()
     Days = models.IntegerField()
 
-from django.db import models
-
 class Booking(models.Model):
     BookingId = models.AutoField(primary_key=True)  
     User = models.CharField(max_length=100)         

@@ -40,8 +40,9 @@ const ManageBookings = () => {
           BookingDate: new Date().toISOString().split('T')[0],
           Status: 'Pending',
         });
-        setBookings([...bookings, response.data]);
+        setBookings((prevBookings) => [...prevBookings, response.data]);
         setNewBooking({ User: '', Tour: '', Departure: '', TravelDate: '' });
+        
       } catch (error) {
         console.error('Error adding booking:', error);
       }
@@ -52,12 +53,15 @@ const ManageBookings = () => {
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
-      const booking = bookings.find((b) => b.BookingId === bookingId);
-      const response = await axios.patch(`http://127.0.0.1:8000/api/bookings/status/`, {
-        ...booking,
-        Status: newStatus,
-      });
-      setBookings(bookings.map((b) => (b.BookingId === bookingId ? response.data : b)));
+      const booking = bookings.find((b) => b.id === bookingId); // Use 'id' if that's the correct key
+      if (booking) {
+        const response = await axios.patch(`http://127.0.0.1:8000/api/bookings/status/${bookingId}/`, {
+          Status: newStatus,
+        });
+        setBookings((prevBookings) =>
+          prevBookings.map((b) => (b.id === bookingId ? response.data : b))
+        );
+      }
     } catch (error) {
       console.error('Error updating booking status:', error);
     }
@@ -86,7 +90,7 @@ const ManageBookings = () => {
               </thead>
               <tbody>
                 {bookings.map((booking) => (
-                  <tr key={booking.BookingId}>
+                  <tr key={booking.BookingId}> 
                     <td>{booking.BookingId}</td>
                     <td>{booking.User}</td>
                     <td>{booking.Tour}</td>
@@ -100,13 +104,13 @@ const ManageBookings = () => {
                           <>
                             <button
                               className="btn"
-                              onClick={() => handleStatusChange(booking.BookingId, 'Confirmed')}
+                              onClick={() => handleStatusChange(booking.id, 'Confirmed')}
                             >
                               Confirm
                             </button>
                             <button
                               className="btn delete"
-                              onClick={() => handleStatusChange(booking.BookingId, 'Canceled')}
+                              onClick={() => handleStatusChange(booking.id, 'Canceled')}
                             >
                               Cancel
                             </button>
@@ -125,14 +129,14 @@ const ManageBookings = () => {
             <input
               type="text"
               name="User"
-              placeholder="User"
+              placeholder="Username"
               value={newBooking.User}
               onChange={handleInputChange}
             />
             <input
               type="text"
               name="Tour"
-              placeholder="Tour"
+              placeholder="Tour Name"
               value={newBooking.Tour}
               onChange={handleInputChange}
             />

@@ -114,15 +114,16 @@ class AddBookingView(APIView):
         travel_date = request.data.get('TravelDate')
         booking_date = request.data.get('BookingDate')
         status = request.data.get('Status')
-        
+        print(user_username)
         try:
+            # Fetch user by username
             user = User.objects.get(username=user_username)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-        
+
         # Prepare the data for booking creation
         booking_data = {
-            'User': user.username,  # Store the username as a string
+            'User': user_username,           # Store the user object (not just the username)
             'Tour': tour_name,      # Store the tour name as a string
             'Departure': departure,
             'TravelDate': travel_date,
@@ -130,15 +131,26 @@ class AddBookingView(APIView):
             'Status': status,
         }
         
+        # Serialize the data using the BookingSerializer
         serializer = BookingSerializer(data=booking_data)
         
         if serializer.is_valid():
             # Save the booking and return the serialized data as a response
             booking = serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)  # Use 201 for created status
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+
+
+# View Booking
+class BookingListView(APIView):
+    # GET request to fetch all bookings
+    def get(self, request):
+        bookings = Booking.objects.all()
+        serializer = BookingSerializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 
