@@ -1,142 +1,163 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './ManageBookings.css';
 
 const ManageBookings = () => {
-    const [bookings, setBookings] = useState([
-        { BookingId: 1, UserId: 'User01', TourId: 'Tour01', DepartureId: 'Dep01', BookingDate: '2024-10-01', TravelDate: '2024-12-10', Status: 'Pending' },
-        { BookingId: 2, UserId: 'User02', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-        { BookingId: 3, UserId: 'User03', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-        { BookingId: 4, UserId: 'User04', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-        { BookingId: 5, UserId: 'User05', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-        { BookingId: 6, UserId: 'User06', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-        { BookingId: 7, UserId: 'User07', TourId: 'Tour02', DepartureId: 'Dep02', BookingDate: '2024-09-15', TravelDate: '2024-11-20', Status: 'Pending' },
-    ]);
+  const [bookings, setBookings] = useState([]);
+  const [newBooking, setNewBooking] = useState({
+    User: '',
+    Tour: '',
+    Departure: '',
+    TravelDate: '',
+  });
 
-    const [newBooking, setNewBooking] = useState({
-        UserId: '',
-        TourId: '',
-        DepartureId: '',
-        TravelDate: ''
-    });
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/bookings/');
+      setBookings(response.data);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    }
+  };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewBooking((prevState) => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
-    const addBooking = () => {
-        if (newBooking.UserId && newBooking.TourId && newBooking.DepartureId && newBooking.TravelDate) {
-            const booking = {
-                BookingId: bookings.length + 1,
-                BookingDate: new Date().toISOString().split('T')[0],
-                Status: 'Pending',
-                ...newBooking
-            };
-            setBookings([...bookings, booking]);
-            setNewBooking({ UserId: '', TourId: '', DepartureId: '', TravelDate: '' });
-        }
-    };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewBooking((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
-    const handleConfirm = (bookingId) => {
-        const updatedBookings = bookings.map((booking) =>
-            booking.BookingId === bookingId ? { ...booking, Status: 'Confirmed' } : booking
-        );
-        setBookings(updatedBookings);
-    };
+  const addBooking = async () => {
+    if (newBooking.User && newBooking.Tour && newBooking.Departure && newBooking.TravelDate) {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/bookings/add/', {
+          ...newBooking,
+          BookingDate: new Date().toISOString().split('T')[0],
+          Status: 'Pending',
+        });
+        setBookings([...bookings, response.data]);
+        setNewBooking({ User: '', Tour: '', Departure: '', TravelDate: '' });
+      } catch (error) {
+        console.error('Error adding booking:', error);
+      }
+    } else {
+      alert("All fields are required to add a booking.");
+    }
+  };
 
-    const handleCancel = (bookingId) => {
-        const updatedBookings = bookings.map((booking) =>
-            booking.BookingId === bookingId ? { ...booking, Status: 'Canceled' } : booking
-        );
-        setBookings(updatedBookings);
-    };
+  const handleStatusChange = async (bookingId, newStatus) => {
+    try {
+      const booking = bookings.find((b) => b.BookingId === bookingId);
+      const response = await axios.patch(`http://127.0.0.1:8000/api/bookings/status/`, {
+        ...booking,
+        Status: newStatus,
+      });
+      setBookings(bookings.map((b) => (b.BookingId === bookingId ? response.data : b)));
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
+  };
 
-    return (
-        <div className="manage-bookings">
-            
-            <div className="content">
-                <div className="container">
-                    <h2>Manage Bookings</h2>
+  return (
+    <div className="manage-bookings">
+      <div className="content">
+        <div className="container">
+          <h2>Manage Bookings</h2>
 
-                    <div className="grid-section">
-                        <h3>Existing Bookings</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Booking ID</th>
-                                    <th>User ID</th>
-                                    <th>Tour ID</th>
-                                    <th>Departure ID</th>
-                                    <th>Booking Date</th>
-                                    <th>Travel Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {bookings.map((booking) => (
-                                    <tr key={booking.BookingId}>
-                                        <td>{booking.BookingId}</td>
-                                        <td>{booking.UserId}</td>
-                                        <td>{booking.TourId}</td>
-                                        <td>{booking.DepartureId}</td>
-                                        <td>{booking.BookingDate}</td>
-                                        <td>{booking.TravelDate}</td>
-                                        <td>{booking.Status}</td>
-                                        <td>
-                                            <div>
-                                                <button className="btn" onClick={() => handleConfirm(booking.BookingId)}>Confirm</button>
-                                            </div>
-                                            <div>
-                                            <button className="btn delete" onClick={() => handleCancel(booking.BookingId)}>Cancel</button>
-                                            </div>
-                                            
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+          <div className="grid-section">
+            <h3>Existing Bookings</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>User</th>
+                  <th>Tour</th>
+                  <th>Departure</th>
+                  <th>Booking Date</th>
+                  <th>Travel Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.map((booking) => (
+                  <tr key={booking.BookingId}>
+                    <td>{booking.BookingId}</td>
+                    <td>{booking.User}</td>
+                    <td>{booking.Tour}</td>
+                    <td>{booking.Departure}</td>
+                    <td>{booking.BookingDate}</td>
+                    <td>{booking.TravelDate}</td>
+                    <td>{booking.Status}</td>
+                    <td>
+                      <div>
+                        {booking.Status === 'Pending' && (
+                          <>
+                            <button
+                              className="btn"
+                              onClick={() => handleStatusChange(booking.BookingId, 'Confirmed')}
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              className="btn delete"
+                              onClick={() => handleStatusChange(booking.BookingId, 'Canceled')}
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-                    <div className="form-section">
-                        <h3>Add New Booking</h3>
-                        <input
-                            type="text"
-                            name="UserId"
-                            placeholder="User ID"
-                            value={newBooking.UserId}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="TourId"
-                            placeholder="Tour ID"
-                            value={newBooking.TourId}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="text"
-                            name="DepartureId"
-                            placeholder="Departure ID"
-                            value={newBooking.DepartureId}
-                            onChange={handleInputChange}
-                        />
-                        <input
-                            type="date"
-                            name="TravelDate"
-                            placeholder="Travel Date"
-                            value={newBooking.TravelDate}
-                            onChange={handleInputChange}
-                        />
-                        <button className="btn" onClick={addBooking}>Add Booking</button>
-                    </div>
-                </div>
-            </div>
+          <div className="form-section">
+            <h3>Add New Booking</h3>
+            <input
+              type="text"
+              name="User"
+              placeholder="User"
+              value={newBooking.User}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="Tour"
+              placeholder="Tour"
+              value={newBooking.Tour}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="Departure"
+              placeholder="Departure"
+              value={newBooking.Departure}
+              onChange={handleInputChange}
+            />
+            <input
+              type="date"
+              name="TravelDate"
+              placeholder="Travel Date"
+              value={newBooking.TravelDate}
+              onChange={handleInputChange}
+            />
+            <button className="btn" onClick={addBooking}>
+              Add Booking
+            </button>
+          </div>
         </div>
-    );
-}
+      </div>
+    </div>
+  );
+};
 
 export default ManageBookings;
