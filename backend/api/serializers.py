@@ -14,13 +14,16 @@ class UserSerializer(serializers.ModelSerializer):
 class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
-        fields = '__all__'
-        read_only_fields = ['BookingDate']  # Automatically set on creation
+        fields = ['BookingId', 'User', 'Tour', 'Departure', 'TravelDate', 'BookingDate', 'Status']  # Include BookingId in the fields
+        read_only_fields = ['BookingId', 'BookingDate']  # BookingId and BookingDate should be read-only
+
+
 
 class BookingStatusUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['Status']
+
 
 
 

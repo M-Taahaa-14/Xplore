@@ -11,12 +11,14 @@ const ManageBookings = () => {
     TravelDate: '',
   });
 
+  // Fetch all bookings from the API
   const fetchBookings = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/bookings/');
       setBookings(response.data);
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error('Error fetching bookings:', error.message);
+      alert('Failed to fetch bookings. Please try again later.');
     }
   };
 
@@ -24,6 +26,7 @@ const ManageBookings = () => {
     fetchBookings();
   }, []);
 
+  // Handle input changes for new booking
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewBooking((prevState) => ({
@@ -32,38 +35,40 @@ const ManageBookings = () => {
     }));
   };
 
+  // Add a new booking and refresh data
   const addBooking = async () => {
-    if (newBooking.User && newBooking.Tour && newBooking.Departure && newBooking.TravelDate) {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/bookings/add/', {
-          ...newBooking,
-          BookingDate: new Date().toISOString().split('T')[0],
-          Status: 'Pending',
-        });
-        setBookings((prevBookings) => [...prevBookings, response.data]);
-        setNewBooking({ User: '', Tour: '', Departure: '', TravelDate: '' });
-        
-      } catch (error) {
-        console.error('Error adding booking:', error);
-      }
-    } else {
-      alert("All fields are required to add a booking.");
+    const { User, Tour, Departure, TravelDate } = newBooking;
+
+    if (!User || !Tour || !Departure || !TravelDate) {
+      alert('All fields are required to add a booking.');
+      return;
+    }
+
+    try {
+      await axios.post('http://127.0.0.1:8000/api/bookings/add/', {
+        ...newBooking,
+        BookingDate: new Date().toISOString().split('T')[0], // Set the current date
+        Status: 'Pending', // Default status
+      });
+      setNewBooking({ User: '', Tour: '', Departure: '', TravelDate: '' }); // Clear the form
+      fetchBookings(); // Refresh bookings
+    } catch (error) {
+      console.error('Error adding booking:', error.message);
+      //alert('Failed to add booking. Please check your input and try again.');   //open when isuue resolved
     }
   };
 
+  // Update the status of an existing booking and refresh data
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
-      const booking = bookings.find((b) => b.id === bookingId); // Use 'id' if that's the correct key
-      if (booking) {
-        const response = await axios.patch(`http://127.0.0.1:8000/api/bookings/status/${bookingId}/`, {
-          Status: newStatus,
-        });
-        setBookings((prevBookings) =>
-          prevBookings.map((b) => (b.id === bookingId ? response.data : b))
-        );
-      }
+      await axios.patch(
+        `http://127.0.0.1:8000/api/bookings/status/${bookingId}/`,
+        { Status: newStatus }
+      );
+      fetchBookings(); // Refresh bookings after status change
     } catch (error) {
-      console.error('Error updating booking status:', error);
+      console.error('Error updating booking status:', error.message);
+      alert('Failed to update booking status. Please try again later.');
     }
   };
 
@@ -73,6 +78,7 @@ const ManageBookings = () => {
         <div className="container">
           <h2>Manage Bookings</h2>
 
+          {/* Existing Bookings Section */}
           <div className="grid-section">
             <h3>Existing Bookings</h3>
             <table>
@@ -89,41 +95,46 @@ const ManageBookings = () => {
                 </tr>
               </thead>
               <tbody>
-                {bookings.map((booking) => (
-                  <tr key={booking.BookingId}> 
-                    <td>{booking.BookingId}</td>
-                    <td>{booking.User}</td>
-                    <td>{booking.Tour}</td>
-                    <td>{booking.Departure}</td>
-                    <td>{booking.BookingDate}</td>
-                    <td>{booking.TravelDate}</td>
-                    <td>{booking.Status}</td>
-                    <td>
-                      <div>
+                {bookings.length > 0 ? (
+                  bookings.map((booking) => (
+                    <tr key={booking.BookingId}>
+                      <td>{booking.BookingId}</td>
+                      <td>{booking.User}</td>
+                      <td>{booking.Tour}</td>
+                      <td>{booking.Departure}</td>
+                      <td>{booking.BookingDate}</td>
+                      <td>{booking.TravelDate}</td>
+                      <td>{booking.Status}</td>
+                      <td>
                         {booking.Status === 'Pending' && (
-                          <>
+                          <div>
                             <button
                               className="btn"
-                              onClick={() => handleStatusChange(booking.id, 'Confirmed')}
+                              onClick={() => handleStatusChange(booking.BookingId, 'Confirmed')}
                             >
                               Confirm
                             </button>
                             <button
                               className="btn delete"
-                              onClick={() => handleStatusChange(booking.id, 'Canceled')}
+                              onClick={() => handleStatusChange(booking.BookingId, 'Canceled')}
                             >
                               Cancel
                             </button>
-                          </>
+                          </div>
                         )}
-                      </div>
-                    </td>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8">No bookings available.</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
 
+          {/* Add New Booking Section */}
           <div className="form-section">
             <h3>Add New Booking</h3>
             <input

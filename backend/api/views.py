@@ -132,11 +132,11 @@ class AddBookingView(APIView):
         }
         
         # Serialize the data using the BookingSerializer
-        serializer = BookingSerializer(data=booking_data)
-        
+        serializer = BookingSerializer(data=booking_data)     
         if serializer.is_valid():
             # Save the booking and return the serialized data as a response
             booking = serializer.save()
+            print(f"Assigned BookingId: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)  # Use 201 for created status
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -158,6 +158,7 @@ class BookingListView(APIView):
 # Update Booking Status
 class UpdateBookingStatusView(APIView):
     def patch(self, request, booking_id):
+        print(request)
         try:
             booking = Booking.objects.get(pk=booking_id)
         except Booking.DoesNotExist:
@@ -166,9 +167,11 @@ class UpdateBookingStatusView(APIView):
         if booking.Status != "Pending":
             return Response({"error": "Only pending bookings can be updated."}, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = BookingStatusUpdateSerializer(booking, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        new_status = request.data.get("Status")
+        print(new_status)
+        if new_status not in ["Confirmed", "Canceled"]:
+            return Response({"error": "Invalid status"}, status=status.HTTP_400_BAD_REQUEST)
 
+        booking.Status = new_status
+        booking.save()
+        return Response({"id": booking.BookingId, "Status": booking.Status}, status=status.HTTP_200_OK)
