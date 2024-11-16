@@ -54,6 +54,7 @@ const ManageBookings = () => {
       fetchBookings(); // Refresh bookings
     } catch (error) {
       console.error('Error adding booking:', error.message);
+      fetchBookings(); // Refresh bookings
       //alert('Failed to add booking. Please check your input and try again.');   //open when isuue resolved
     }
   };
