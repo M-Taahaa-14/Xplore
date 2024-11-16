@@ -68,14 +68,6 @@ const UserProfile = () => {
 
   return (
     <div style={{ display: 'flex' }}>
-      <div className="sidebar">
-        <a href="Admin" className="active">🏠 Admin Dashboard</a>
-        <a href="#">👥 Manage Users</a>
-        <a href="ManageDestinations">🗺️ Manage Destinations</a>
-        <a href="ManageTours">📅 Manage Tours</a>
-        <a href="ManageBookings">📑 Manage Bookings</a>
-        <a href="login.jsx" className="logout">🔓 Logout</a>
-      </div>
       <div className="container">
         <h2>User Dashboard</h2>
 

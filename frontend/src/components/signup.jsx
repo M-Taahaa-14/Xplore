@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import axios from 'axios';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -15,8 +15,7 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -63,17 +62,13 @@ const Signup = () => {
       });
     
       console.log('Signup successful', response.data);
-      
-      // Redirect to login page upon successful signup
-      navigate('/login');
-      
+      navigate('/login'); // Redirect to login page on success
     } catch (error) {
       const errorMsg = error.response?.data?.errors;
     
       if (typeof errorMsg === 'string') {
         setError(errorMsg);
       } else if (typeof errorMsg === 'object') {
-        // If it's an object, map through its keys to display each error message
         const messages = Object.values(errorMsg).flat().join(', ');
         setError(messages);
       } else {
@@ -134,6 +129,7 @@ const Signup = () => {
   );
 };
 
+// Inline CSS styles
 const styles = {
   page: {
     display: 'flex',

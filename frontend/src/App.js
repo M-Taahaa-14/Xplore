@@ -31,6 +31,10 @@ import WeatherForecast from './components/WeatherForecast.jsx';
 const App = () => {
   return (
     <Router>
+        <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        </Routes>
       <Header /> {/* Header for both client */}
       {/* <SideBar/> */}
       <Routes>
@@ -43,8 +47,6 @@ const App = () => {
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/userprofile" element={<UserProfile />} />
         <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/signnew" element={<SignNew />} />
         <Route path="/tourguide" element={<TourGuide />} />
         <Route path="/termsofservice" element={<TermsOfService />} />
