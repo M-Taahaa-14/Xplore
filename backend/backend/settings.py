@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = 'Konnect!123'  # Replace this with a secure key
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 CORS_ALLOW_ALL_ORIGINS = True  # For testing purposes, but consider disabling in production.
 CORS_ALLOW_CREDENTIALS = True  # If you want to send cookies in the requests

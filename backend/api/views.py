@@ -67,6 +67,42 @@ def get_user_by_email(request):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['PUT'])
+def update_user_profile(request):
+    """
+    Updates user profile details based on the provided email.
+    """
+    email = request.data.get('email')
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        user = User.objects.get(email=email)
+        
+        # Update fields only if they are provided in the request
+        if 'name' in request.data:
+            user.name = request.data['name']
+        if 'phoneNumber' in request.data:
+            user.phone_num = request.data['phoneNumber']
+        
+        # Save updated user details
+        user.save()
+
+        # Send updated user data in the response
+        updated_user_data = {
+            'Name': user.name,
+            'Username': user.username,
+            'Email': user.email,
+            'DOB': str(user.dob),
+            'Phone-Number': user.phone_num,
+            'Gender': user.gender,
+        }
+        return Response({'user': updated_user_data}, status=status.HTTP_200_OK)
+    
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # Weather Forecast

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
-
+import EditProfileForm from "./EditProfileForm";
 
 const calculateAge = (dob) => {
   const birthDate = new Date(dob);
@@ -17,6 +17,7 @@ const UserProfile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [bookings, setBookings] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false); // State for controlling form visibility
 
   // Retrieve the stored email from localStorage
   const loggedInEmail = localStorage.getItem('userEmail');
@@ -73,15 +74,20 @@ const UserProfile = () => {
 
         <section className="profile">
           <h3>Profile</h3>
-          <p>Full Name: {userProfile.Name}</p> {/* Adjusted to display 'Name' */}
-          <p>Username: {userProfile.username}</p> {/* Adjusted to display 'Name' */}
-          <p>Email: {loggedInEmail}</p> {/* Display the email from localStorage */}
-          <p>Date of Birth: {userProfile['DOB']}</p> {/* Display Date of Birth */}
+          <p>Full Name: {userProfile.Name}</p>
+          <p>Username: {userProfile.username}</p>
+          <p>Email: {loggedInEmail}</p>
+          <p>Date of Birth: {userProfile['DOB']}</p>
           <p>Age: {calculateAge(userProfile['DOB'])}</p>
-
-          <p>Phone Number: {userProfile['Phone-Number']}</p> {/* Display Phone Number */}
-          <p>Gender: {userProfile.Gender}</p> {/* Display Gender */}
-          <button className="btn" onClick={() => alert('Edit Profile Clicked')}>Edit Profile</button>
+          <p>Phone Number: {userProfile['Phone-Number']}</p>
+          <p>Gender: {userProfile.Gender}</p>
+          {/* Update the Edit Profile button to use setIsEditProfileOpen */}
+          <button 
+            className="btn" 
+            onClick={() => setIsEditProfileOpen(true)}
+          >
+            Edit Profile
+          </button>
         </section>
 
         <section className="bookings">
@@ -146,6 +152,15 @@ const UserProfile = () => {
             </table>
           )}
         </section>
+        {/* Add the EditProfileForm component */}
+        {isEditProfileOpen && (
+          <EditProfileForm
+            userProfile={userProfile}
+            onClose={() => setIsEditProfileOpen(false)}
+            onUpdate={(updatedProfile) => setUserProfile(updatedProfile)}
+            refreshProfile={() => fetchUserProfile(loggedInEmail)} // Pass this as a prop
+          />
+        )}
       </div>
     </div>
   );
