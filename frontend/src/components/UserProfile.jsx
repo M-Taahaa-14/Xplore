@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
 import EditProfileForm from "./EditProfileForm";
 
+// Function to calculate the user's age based on their date of birth
 const calculateAge = (dob) => {
   const birthDate = new Date(dob);
   const today = new Date();
@@ -17,11 +18,11 @@ const UserProfile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [bookings, setBookings] = useState([]);
   const [wishlist, setWishlist] = useState([]);
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false); // State for controlling form visibility
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
-  // Retrieve the stored email from localStorage
-  const loggedInEmail = localStorage.getItem('userEmail');
+  const loggedInEmail = localStorage.getItem("userEmail");
 
+  // Fetch user data (profile, bookings, wishlist) after the component mounts
   useEffect(() => {
     if (loggedInEmail) {
       fetchUserProfile(loggedInEmail);
@@ -30,6 +31,7 @@ const UserProfile = () => {
     }
   }, [loggedInEmail]);
 
+  // Fetch user profile data from the backend API
   const fetchUserProfile = async (email) => {
     const response = await fetch(`http://127.0.0.1:8000/api/user-profile/?email=${email}`, {
       method: "GET",
@@ -41,34 +43,50 @@ const UserProfile = () => {
 
     if (response.ok) {
       const data = await response.json();
-      setUserProfile(data.user); // Adjusted to access the 'user' field
+      setUserProfile(data.user);
     } else {
       console.error("Failed to fetch user profile");
     }
   };
 
+  // Fetch user bookings data from the backend API
   const fetchUserBookings = async (email) => {
-    const response = await fetch(`/api/bookings?email=${email}`);
+    const response = await fetch(`http://127.0.0.1:8000/api/user-bookings/?username=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
     if (response.ok) {
       const data = await response.json();
-      setBookings(data); // Store the bookings data
+      setBookings(data.bookings); // Assume 'bookings' is the key in the response
     } else {
       console.error("Failed to fetch bookings");
     }
   };
 
+  // Fetch user wishlist data from the backend API
   const fetchUserWishlist = async (email) => {
-    const response = await fetch(`/api/wishlist?email=${email}`);
+    const response = await fetch(`http://127.0.0.1:8000/api/user-wishlist/?username=${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
     if (response.ok) {
       const data = await response.json();
-      setWishlist(data); // Store the wishlist data
+      setWishlist(data.wishlist); // Assume 'wishlist' is the key in the response
     } else {
       console.error("Failed to fetch wishlist");
     }
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <div className="container">
         <h2>User Dashboard</h2>
 
@@ -77,15 +95,11 @@ const UserProfile = () => {
           <p>Full Name: {userProfile.Name}</p>
           <p>Username: {userProfile.username}</p>
           <p>Email: {loggedInEmail}</p>
-          <p>Date of Birth: {userProfile['DOB']}</p>
-          <p>Age: {calculateAge(userProfile['DOB'])}</p>
-          <p>Phone Number: {userProfile['Phone-Number']}</p>
+          <p>Date of Birth: {userProfile.DOB}</p>
+          <p>Age: {calculateAge(userProfile.DOB)}</p>
+          <p>Phone Number: {userProfile["Phone-Number"]}</p>
           <p>Gender: {userProfile.Gender}</p>
-          {/* Update the Edit Profile button to use setIsEditProfileOpen */}
-          <button 
-            className="btn" 
-            onClick={() => setIsEditProfileOpen(true)}
-          >
+          <button className="btn" onClick={() => setIsEditProfileOpen(true)}>
             Edit Profile
           </button>
         </section>
@@ -109,12 +123,14 @@ const UserProfile = () => {
               <tbody>
                 {bookings.map((booking, index) => (
                   <tr key={index}>
-                    <td>{booking.tourName}</td>
-                    <td>{booking.departureCity}</td>
-                    <td>{booking.bookingDate}</td>
-                    <td>{booking.status}</td>
-                    <td>{booking.travelDate}</td>
-                    <td><button onClick={() => alert('Give Review')}>Give Review</button></td>
+                    <td>{booking.Tour}</td> {/* Correct field names from API */}
+                    <td>{booking.Departure}</td>
+                    <td>{booking.BookingDate}</td>
+                    <td>{booking.Status}</td>
+                    <td>{booking.TravelDate}</td>
+                    <td>
+                      <button onClick={() => alert("Give Review")}>Give Review</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -143,8 +159,8 @@ const UserProfile = () => {
                     <td>{item.region}</td>
                     <td>{item.location}</td>
                     <td>
-                      <button onClick={() => alert('Booking Item')}>Book</button>
-                      <button onClick={() => alert('Remove Item')}>Remove</button>
+                      <button onClick={() => alert("Booking Item")}>Book</button>
+                      <button onClick={() => alert("Remove Item")}>Remove</button>
                     </td>
                   </tr>
                 ))}
@@ -152,13 +168,14 @@ const UserProfile = () => {
             </table>
           )}
         </section>
-        {/* Add the EditProfileForm component */}
+
+        {/* Edit Profile Form */}
         {isEditProfileOpen && (
           <EditProfileForm
             userProfile={userProfile}
             onClose={() => setIsEditProfileOpen(false)}
             onUpdate={(updatedProfile) => setUserProfile(updatedProfile)}
-            refreshProfile={() => fetchUserProfile(loggedInEmail)} // Pass this as a prop
+            refreshProfile={() => fetchUserProfile(loggedInEmail)}
           />
         )}
       </div>

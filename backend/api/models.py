@@ -71,3 +71,13 @@ class Booking(models.Model):
     def __str__(self):
         return f"Booking {self.BookingId} for {self.User} to {self.Tour}"
 
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, related_name='wishlists')
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s wishlist - {self.tour.name}"
+
+    class Meta:
+        unique_together = ('user', 'tour')  # Ensure each user can only add a tour once to their wishlist

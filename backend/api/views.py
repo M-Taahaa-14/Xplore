@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets
 from django.contrib.auth.hashers import make_password, check_password
-from .models import User, Tour, Booking
+from .models import User, Tour, Booking, Wishlist
 from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer
 import requests
 from django.conf import settings
@@ -139,6 +139,20 @@ class WeatherForecastView(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+def get_user_wishlist(request):
+    username = request.GET.get('username')
+    if username:
+        wishlist_items = Wishlist.objects.filter(user__username=username)
+        wishlist_data = []
+        for item in wishlist_items:
+            wishlist_data.append({
+                'name': item.tour.name,
+                'region': item.tour.region,
+                'location': item.tour.location,
+            })
+        return JsonResponse({'wishlist': wishlist_data})
+    return JsonResponse({'error': 'Username parameter is required'}, status=400)
+
 # Add a Booking
 
 class AddBookingView(APIView):
@@ -177,8 +191,23 @@ class AddBookingView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def get_user_bookings(request):
+    username = request.GET.get('username')  # Fetch username from query params
+    if not username:
+        return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+    try:
+        # Filter bookings by username
+        bookings = Booking.objects.filter(User=username)
+        if not bookings.exists():
+            return Response({'message': 'No bookings found for this user'}, status=status.HTTP_404_NOT_FOUND)
 
+        # Serialize the bookings
+        serializer = BookingSerializer(bookings, many=True)
+        return Response({'bookings': serializer.data}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # View Booking
 class BookingListView(APIView):

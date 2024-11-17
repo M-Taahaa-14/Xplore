@@ -19,5 +19,6 @@ urlpatterns = [
     path('bookings/add/', AddBookingView.as_view(), name='add-booking'),
     path('bookings/', BookingListView.as_view(), name='booking-list'),
     path('bookings/status/<int:booking_id>/', UpdateBookingStatusView.as_view(), name='update-booking-status'),
+     path('user-bookings/', views.get_user_bookings, name='get_user_bookings'),
     path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
 ]
