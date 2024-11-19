@@ -93,11 +93,11 @@ const UserProfile = () => {
         <section className="profile">
           <h3>Profile</h3>
           <p>Full Name: {userProfile.Name}</p>
-          <p>Username: {userProfile.username}</p>
+          <p>Username: {userProfile.Username}</p>
           <p>Email: {loggedInEmail}</p>
           <p>Date of Birth: {userProfile.DOB}</p>
           <p>Age: {calculateAge(userProfile.DOB)}</p>
-          <p>Phone Number: {userProfile["Phone-Number"]}</p>
+          <p>Phone Number: {userProfile.PhoneNumber}</p>
           <p>Gender: {userProfile.Gender}</p>
           <button className="btn" onClick={() => setIsEditProfileOpen(true)}>
             Edit Profile
