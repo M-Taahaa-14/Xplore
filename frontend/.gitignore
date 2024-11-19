@@ -71,3 +71,6 @@ Desktop.ini    # Windows desktop settings
 # Ignore Jest config and logs
 jest-cache/
 jest-results/
+
+# Ignore virtual environment
+venv/
