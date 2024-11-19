@@ -2,6 +2,12 @@
 from rest_framework import serializers  # Correct import for serializers
 from .models import User
 from .models import Booking 
+from .models import Destination
+
+
+
+
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -24,6 +30,8 @@ class BookingStatusUpdateSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['Status']
 
-
-
-
+class DestinationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Destination
+        fields = ['DestinationId', 'Name', 'Region', 'Location', 'Latitude', 'Longitude', 'GoogleMapsLink']
+        read_only_fields = ['DestinationId'] 

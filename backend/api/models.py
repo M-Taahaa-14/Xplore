@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -42,11 +43,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
+from django.db import models
+
 class Destination(models.Model):
-    DestinationId = models.IntegerField(primary_key=True)
+    DestinationId = models.AutoField(primary_key=True)  
     Name = models.CharField(max_length=100)
     Region = models.CharField(max_length=100)
     Location = models.CharField(max_length=100)
+    Latitude = models.FloatField(null=True, blank=True)
+    Longitude = models.FloatField(null=True, blank=True)
+    GoogleMapsLink = models.URLField(max_length=1000, null=True, blank=True)
+
+    def __str__(self):
+        return self.Name
+
+
+
 
 class Tour(models.Model):
     TourId = models.IntegerField(primary_key=True)

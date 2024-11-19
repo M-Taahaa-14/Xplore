@@ -2,23 +2,24 @@ import React, { useEffect, useState } from 'react';
 import './ManageDestinations.css';
 
 const ManageDestinations = () => {
-    {/*below are some sample destinations added */}
-    const [destinations, setDestinations] = useState([
-        { DestinationId: 1, Name: 'Paris', Region: 'Europe', Location: 'France' },
-        { DestinationId: 2, Name: 'Tokyo', Region: 'Asia', Location: 'Japan' },
-        { DestinationId: 3, Name: 'New York', Region: 'North America', Location: 'USA' },
-        { DestinationId: 4, Name: 'Sydney', Region: 'Australia', Location: 'Australia' },
-        { DestinationId: 5, Name: 'Cairo', Region: 'Africa', Location: 'Egypt' }
-    ]);
-
+    const [destinations, setDestinations] = useState([]);
     const [newDestination, setNewDestination] = useState({
         DestinationId: '',
         Name: '',
         Region: '',
-        Location: ''
+        Location: '',
+        Latitude: '',
+        Longitude: ''
     });
 
-    // Handle input changes
+    // Fetch destinations from the backend
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/api/destinations/')
+            .then(response => response.json())
+            .then(data => setDestinations(data));
+    }, []);
+
+    // Handle input changes for adding a new destination
     const handleChange = (e) => {
         const { name, value } = e.target;
         setNewDestination({ ...newDestination, [name]: value });
@@ -26,27 +27,32 @@ const ManageDestinations = () => {
 
     // Add a new destination
     const handleAddDestination = () => {
-        if (newDestination.DestinationId && newDestination.Name && newDestination.Region && newDestination.Location) {
-            //tried this but it doesn't work, destinationId is not displayed, so now doing manually
-            // const newId = destinations.length + 1; // Calculate new ID
-            // const newDest = { DestinationId: newId, ...newDestination }; // Assign new ID to destination
-
-            // Convert DestinationId to a number
-            const newId = parseInt(newDestination.DestinationId, 10);
-            
-            // Check for duplicate DestinationId
-            if (destinations.some(dest => dest.DestinationId === newId)) {
-                alert(`Destination ID ${newId} already exists!`);
-                return; // Do nothing if duplicate
-            }
-            setDestinations([...destinations, newDestination]); // Add the new destination with ID
-            setNewDestination({ DestinationId: '', Name: '', Region: '', Location: '' }); // Clear the form
+        if (newDestination.Name && newDestination.Region && newDestination.Location && newDestination.Latitude && newDestination.Longitude) {
+            fetch('http://127.0.0.1:8000/api/destinations/add/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newDestination),
+            })
+            .then(response => response.json())
+            .then(data => {
+                setDestinations([...destinations, data]);
+                setNewDestination({ DestinationId: '', Name: '', Region: '', Location: '', Latitude: '', Longitude: '' });
+            })
+            .catch(error => console.error('Error adding destination:', error));
         }
     };
 
     // Delete a destination
     const handleDeleteDestination = (id) => {
-        setDestinations(destinations.filter(destination => destination.DestinationId !== id));
+        fetch(`http://127.0.0.1:8000/api/destinations/delete/${id}/`, {
+            method: 'DELETE',
+        })
+        .then(() => {
+            setDestinations(destinations.filter(destination => destination.DestinationId !== id));
+        })
+        .catch(error => console.error('Error deleting destination:', error));
     };
 
     return (
@@ -55,7 +61,7 @@ const ManageDestinations = () => {
                 <h2>Manage Destinations</h2>
                 <div className="grid-section">
                     <h3>Existing Destinations</h3>
-                    <div className="table-container"> {/* Added scrollable container */}
+                    <div className="table-container">
                         <table>
                             <thead>
                                 <tr>
@@ -64,6 +70,7 @@ const ManageDestinations = () => {
                                     <th>Region</th>
                                     <th>Location</th>
                                     <th>Actions</th>
+                                    <th>Google Maps Link</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,6 +83,13 @@ const ManageDestinations = () => {
                                         <td>
                                             <button onClick={() => handleDeleteDestination(destination.DestinationId)} className="btn delete">Delete</button>
                                         </td>
+                                        <td>
+                                            {destination.GoogleMapsLink && (
+                                                <a href={destination.GoogleMapsLink} target="_blank" rel="noopener noreferrer">
+                                                    View on Google Maps
+                                                </a>
+                                            )}
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -85,35 +99,11 @@ const ManageDestinations = () => {
 
                 <div className="form-section">
                     <h3>Add New Destination</h3>
-                    <input
-                        type="text"
-                        name="DestinationId"
-                        placeholder="DestinationId"
-                        value={newDestination.DestinationId}
-                        onChange={handleChange}
-                    />
-
-                    <input
-                        type="text"
-                        name="Name"
-                        placeholder="Name"
-                        value={newDestination.Name}
-                        onChange={handleChange}
-                    />
-                    <input
-                        type="text"
-                        name="Region"
-                        placeholder="Region"
-                        value={newDestination.Region}
-                        onChange={handleChange}
-                    />
-                    <input
-                        type="text"
-                        name="Location"
-                        placeholder="Location"
-                        value={newDestination.Location}
-                        onChange={handleChange}
-                    />
+                    <input type="text" name="Name" placeholder="Name" value={newDestination.Name} onChange={handleChange} />
+                    <input type="text" name="Region" placeholder="Region" value={newDestination.Region} onChange={handleChange} />
+                    <input type="text" name="Location" placeholder="Location" value={newDestination.Location} onChange={handleChange} />
+                    <input type="number" name="Latitude" placeholder="Latitude" value={newDestination.Latitude} onChange={handleChange} />
+                    <input type="number" name="Longitude" placeholder="Longitude" value={newDestination.Longitude} onChange={handleChange} />
                     <button onClick={handleAddDestination} className="btn">Add Destination</button>
                 </div>
             </div>
@@ -121,7 +111,6 @@ const ManageDestinations = () => {
     );
 };
 
-// Inline styles (could also use CSS files or styled-components)
 const styles = {
     container: {
         width: '80%',

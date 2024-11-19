@@ -6,10 +6,11 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets
 from django.contrib.auth.hashers import make_password, check_password
-from .models import User, Tour, Booking, Wishlist
-from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer
+from .models import User, Tour, Booking, Wishlist, Destination
+from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer, DestinationSerializer
 import requests
 from django.conf import settings
+
 
 
 # User Signup
@@ -209,6 +210,9 @@ def get_user_bookings(request):
     except Exception as e:
         return Response({'error': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
 # View Booking
 class BookingListView(APIView):
     # GET request to fetch all bookings
@@ -240,3 +244,61 @@ class UpdateBookingStatusView(APIView):
         booking.Status = new_status
         booking.save()
         return Response({"id": booking.BookingId, "Status": booking.Status}, status=status.HTTP_200_OK)
+    
+
+class DestinationListView(APIView):
+    def get(self, request):
+        destinations = Destination.objects.all()
+        serializer = DestinationSerializer(destinations, many=True)
+        return Response(serializer.data)
+
+class DestinationCreateView(APIView):
+    def post(self, request):
+        # Extract data
+        data = request.data
+
+        try:
+            latitude = float(data.get("Latitude", 0))
+            longitude = float(data.get("Longitude", 0))
+
+            if not (-90 <= latitude <= 90):
+                return Response({"error": "Latitude must be between -90 and 90."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if not (-180 <= longitude <= 180):
+                return Response({"error": "Longitude must be between -180 and 180."}, status=status.HTTP_400_BAD_REQUEST)
+        except ValueError:
+            return Response({"error": "Latitude and Longitude must be numeric values."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate Google Maps link
+        google_maps_link = f"https://www.google.com/maps?q={latitude},{longitude}"
+        data["GoogleMapsLink"] = google_maps_link
+
+        print(data)
+        # Save the destination
+        sanitized_data = {
+            "Name": data.get("Name", ""),
+            "Region": data.get("Region", ""),
+            "Location": data.get("Location", ""),
+            "Latitude": latitude,
+            "Longitude": longitude,
+            "GoogleMapsLink": google_maps_link
+        }
+        print(sanitized_data)
+
+        # Create the serializer with sanitized data
+        serializer = DestinationSerializer(data=sanitized_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DestinationDeleteView(APIView):
+    def delete(self, request, pk):
+        try:
+            destination = Destination.objects.get(pk=pk)
+            destination.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Destination.DoesNotExist:
+            return Response({"error": "Destination not found"}, status=status.HTTP_404_NOT_FOUND)

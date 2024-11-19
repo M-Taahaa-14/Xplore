@@ -8,6 +8,9 @@ from .views import (
     BookingListView,
     UpdateBookingStatusView,
     WeatherForecastView,
+    DestinationListView,
+    DestinationCreateView, 
+    DestinationDeleteView
 )
 
 urlpatterns = [
@@ -19,6 +22,10 @@ urlpatterns = [
     path('bookings/add/', AddBookingView.as_view(), name='add-booking'),
     path('bookings/', BookingListView.as_view(), name='booking-list'),
     path('bookings/status/<int:booking_id>/', UpdateBookingStatusView.as_view(), name='update-booking-status'),
-     path('user-bookings/', views.get_user_bookings, name='get_user_bookings'),
+    path('user-bookings/', views.get_user_bookings, name='get_user_bookings'),
     path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
+
+    path('destinations/', DestinationListView.as_view(), name='destination-list'),  # GET: list all destinations
+    path('destinations/add/', DestinationCreateView.as_view(), name='destination-create'),  # POST: create a new destination
+    path('destinations/delete/<int:pk>/', DestinationDeleteView.as_view(), name='destination-delete'),  # DELETE: delete a destination by ID
 ]
