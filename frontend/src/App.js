@@ -29,12 +29,13 @@ import WeatherForecast from './components/WeatherForecast.jsx';
 import Chatbox from './components/ChatRoom.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import CarRental from './components/CarRental';
+import Privacy from './components/PrivacyPolicy.jsx';
 
 // Layout Components
 const UserLayout = ({ children }) => (
   <>
     <Sidebar />
-    <Header />
+    {/* <Header /> */}
     <main>{children}</main>
     <Footer />
   </>
@@ -222,6 +223,14 @@ const App = () => {
           element={
             <UserLayout>
               <CarRental />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/privacypolicy"
+          element={
+            <UserLayout>
+              <Privacy />
             </UserLayout>
           }
         />

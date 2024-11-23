@@ -6,6 +6,13 @@ import './Sidebar.css';
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true); // Track sidebar state (open or minimized)
 
+  const handleLogout = () => {
+    localStorage.removeItem('userEmail'); // Clear user session from localStorage
+    sessionStorage.clear(); // Optionally clear sessionStorage if you're using it
+    document.cookie = 'session_id=; expires=Thu, 01 Jan 1970 00:00:00 GMT'; // Clear cookies, if needed
+    window.location.href = '/login'; // Redirect to login page
+  };
+  
   // Toggle sidebar visibility
   const toggleSidebar = () => setIsOpen(!isOpen);
 
@@ -44,9 +51,9 @@ const Sidebar = () => {
         </Link>
       </div>
       <div className="sidebar-footer">
-        <Link to="/logout" className="sidebar-link">
-          <FaSignOutAlt /> {isOpen && 'Logout'}
-        </Link>
+      <Link to="/logout" className="sidebar-link" onClick={handleLogout}>
+      <FaSignOutAlt /> {isOpen && 'Logout'}
+    </Link>
       </div>
     </div>
   );

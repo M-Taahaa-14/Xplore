@@ -22,24 +22,6 @@ const Home = () => {
 
   return (
     <div>
-      {/* this should be in header.jsx and in header section in it */}
-      <div className="menu" onClick={toggleMenu}>
-        <div className="menu-bar"></div>
-        <div className="menu-bar"></div>
-        <div className="menu-bar"></div>
-      </div>
-
-      <div className="dropdown-menu" id="dropdownMenu">
-        <button
-          onClick={() => {
-            localStorage.removeItem('userEmail'); // Clear session
-            window.location.href = '/login'; // Redirect to login
-          }}
-        >
-          Logout
-        </button>
-      </div>
-
       <main>
         <section className="hero">
           <div className="hero-content">
@@ -146,9 +128,4 @@ const Home = () => {
   );
 };
 
-
-const toggleMenu = () => {
-  const menu = document.getElementById("dropdownMenu");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
-};
 export default Home;
