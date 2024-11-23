@@ -251,47 +251,91 @@ class DestinationListView(APIView):
         destinations = Destination.objects.all()
         serializer = DestinationSerializer(destinations, many=True)
         return Response(serializer.data)
+    
+
+
+
+
+from datetime import datetime
+from django.conf import settings
+import os
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from django.core.files.storage import default_storage
+from .serializers import DestinationSerializer
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from datetime import datetime
+import os
+from django.core.files.storage import default_storage
+from django.conf import settings
+from .serializers import DestinationSerializer
+from .models import Destination
+from rest_framework import status
+
 
 class DestinationCreateView(APIView):
-    def post(self, request):
-        # Extract data
-        data = request.data
+    parser_classes = [MultiPartParser]  # Handle file uploads
 
+    def post(self, request):
+        data = request.data
         try:
+            # Parse and validate latitude/longitude
             latitude = float(data.get("Latitude", 0))
             longitude = float(data.get("Longitude", 0))
-
             if not (-90 <= latitude <= 90):
                 return Response({"error": "Latitude must be between -90 and 90."}, status=status.HTTP_400_BAD_REQUEST)
-            
             if not (-180 <= longitude <= 180):
                 return Response({"error": "Longitude must be between -180 and 180."}, status=status.HTTP_400_BAD_REQUEST)
-        except ValueError:
-            return Response({"error": "Latitude and Longitude must be numeric values."}, status=status.HTTP_400_BAD_REQUEST)
+            google_maps_link = f"https://www.google.com/maps?q={latitude},{longitude}"
 
-        # Generate Google Maps link
-        google_maps_link = f"https://www.google.com/maps?q={latitude},{longitude}"
-        data["GoogleMapsLink"] = google_maps_link
+            # Parse and validate dates
+            start_date = data.get("StartDate")
+            end_date = data.get("EndDate")
+            if start_date and end_date:
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+                if start_date > end_date:
+                    return Response({"error": "StartDate must be earlier than EndDate."}, status=status.HTTP_400_BAD_REQUEST)
+                total_days = (end_date - start_date).days + 1
+                nights = total_days - 1
+            else:
+                total_days, nights = 0, 0
 
-        print(data)
-        # Save the destination
-        sanitized_data = {
-            "Name": data.get("Name", ""),
-            "Region": data.get("Region", ""),
-            "Location": data.get("Location", ""),
-            "Latitude": latitude,
-            "Longitude": longitude,
-            "GoogleMapsLink": google_maps_link
-        }
-        print(sanitized_data)
+            # Save the image
+            image = request.FILES.get('Image')
 
-        # Create the serializer with sanitized data
-        serializer = DestinationSerializer(data=sanitized_data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # Prepare sanitized data
+            sanitized_data = {
+                "Name": data.get("Name"),
+                "Region": data.get("Region"),
+                "Location": data.get("Location"),
+                "Latitude": latitude,
+                "Longitude": longitude,
+                "GoogleMapsLink": google_maps_link,
+                "Price": float(data.get("Price", 0)),
+                "MaxTravellers": int(data.get("MaxTravellers", 0)),
+                "StartDate": start_date,
+                "EndDate": end_date,
+                "Nights": nights,
+                "Days": total_days,
+                "Image": image,
+            }
+
+            # Serialize and save the data
+            serializer = DestinationSerializer(data=sanitized_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class DestinationDeleteView(APIView):

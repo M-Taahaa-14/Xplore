@@ -3,6 +3,8 @@ from rest_framework import serializers  # Correct import for serializers
 from .models import User
 from .models import Booking 
 from .models import Destination
+from django.conf import settings
+import os
 
 
 
@@ -30,8 +32,36 @@ class BookingStatusUpdateSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['Status']
 
+
+
+
+
+from rest_framework import serializers
+from .models import Destination
+from django.conf import settings
+from rest_framework import serializers
+from django.conf import settings
+from .models import Destination
+
 class DestinationSerializer(serializers.ModelSerializer):
+    
+
     class Meta:
         model = Destination
-        fields = ['DestinationId', 'Name', 'Region', 'Location', 'Latitude', 'Longitude', 'GoogleMapsLink']
-        read_only_fields = ['DestinationId'] 
+        fields = [
+            'DestinationId', 'Name', 'Region', 'Location', 'Latitude', 'Longitude',
+            'GoogleMapsLink', 'Price', 'MaxTravellers', 'StartDate', 'EndDate',
+            'Nights', 'Days', 'Image'
+        ]
+        read_only_fields = ['DestinationId']
+
+    def get_ImageURL(self, obj):
+        # Return full URL to the image
+        if obj.ImageURL:
+            print(obj.ImageURL)
+            return os.path.join(settings.MEDIA_ROOT, obj.ImageURL)
+            
+        return None
+
+        
+

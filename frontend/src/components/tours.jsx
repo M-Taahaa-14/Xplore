@@ -1,5 +1,7 @@
 import './tours.css';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // You can use axios for fetching data, or use fetch
 
 const TourCard = ({ image, title, location, price, reviews, rating }) => {
   const navigate = useNavigate();
@@ -34,91 +36,37 @@ const TourCard = ({ image, title, location, price, reviews, rating }) => {
 };
 
 const Tours = () => {
-  const toursData = [
-    // Existing Tours
-    {
-      image: 'images/skardu.jpeg',
-      title: 'Shangrilla, Skardu',
-      location: 'Pakistan',
-      price: '5000',
-      reviews: 413,
-      rating: '9.0 Superb',
-    },
-    {
-      image: 'images/khumrat.jpeg',
-      title: 'Khumrat Valley',
-      location: 'Swat, Pakistan',
-      price: '3000',
-      reviews: 43,
-      rating: '8.5 Fabulous',
-    },
-    {
-      image: 'images/rattigali.jpeg',
-      title: 'Ratti Galli',
-      location: 'Azad Kashmir',
-      price: '6000',
-      reviews: 169,
-      rating: '8.7 Heaven On Earth',
-    },
+  const [destinations, setDestinations] = useState([]);
+  const navigate = useNavigate();
 
-    // Added Treks
-    {
-      image: 'images/chittalake.jpg',
-      title: 'Chitta Katha Lake Trek (4100 meters)',
-      location: 'Neelum Valley, Pakistan',
-      price: '35000',
-      reviews: 120,
-      rating: '9.1 Excellent',
-    },
-    {
-      image: 'images/rakaposhi.jpeg',
-      title: 'Rakaposhi Base Camp Trek (3500 Meters)',
-      location: 'Gilgit-Baltistan, Pakistan',
-      price: '80000',
-      reviews: 98,
-      rating: '8.8 Fabulous',
-    },
-    {
-      image: 'images/kutwal.jpg',
-      title: 'Haramosh Valley (Kutwal Lake) Trek (7409m)',
-      location: 'Gilgit-Baltistan, Pakistan',
-      price: '55000',
-      reviews: 75,
-      rating: '9.0 Superb',
-    },
-    {
-      image: 'images/k2.jpeg',
-      title: 'K2 Base Camp Trek',
-      location: 'Karakoram Range, Pakistan',
-      price: '80000',
-      reviews: 150,
-      rating: '9.5 Exceptional',
-    },
-    {
-      image: 'images/ratti.jpeg',
-      title: 'Ratti Gali Trek',
-      location: 'Azad Kashmir, Pakistan',
-      price: '20000',
-      reviews: 60,
-      rating: '8.5 Beautiful',
-    },
-    {
-      image: 'images/fairymeadows.jpeg',
-      title: 'Fairy Meadows',
-      location: 'Gilgit-Baltistan, Pakistan',
-      price: '40000',
-      reviews: 200,
-      rating: '9.3 Amazing',
-    },
-  ];
+  // Fetch destinations from the backend
+  useEffect(() => {
+    // Assuming the backend API returns a list of destinations
+    axios.get('http://127.0.0.1:8000/api/destinations/')
+      .then(response => {
+        // Assuming the response data contains destination objects
+        setDestinations(response.data);
+      })
+      .catch(error => {
+        console.error("Error fetching destinations:", error);
+      });
+  }, []);
 
   return (
     <div>
       <section className="featured-liveaboards">
-        <h2>Our Tours</h2>
+        <h2>Our Destinations</h2>
         <div className="liveaboard-cards">
-          {toursData.map((tour, index) => (
-            <TourCard key={index} {...tour} />
+          {destinations.map((destination, index) => (
+            <TourCard
+              key={index}
+              image={`http://127.0.0.1:8000${destination.Image}`} // Assuming ImageURL contains the correct URL
+              title={destination.Name}
+              location={destination.Location}
+              price={destination.Price}
+              reviews={destination.reviews || 0} // If reviews are not available, default to 0
+              rating={destination.rating || 'N/A'} // Default to 'N/A' if no rating
+            />
           ))}
         </div>
       </section>

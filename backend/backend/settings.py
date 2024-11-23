@@ -3,6 +3,7 @@ from pathlib import Path
 from decouple import config
 
 # Paths and directories
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
@@ -27,6 +28,8 @@ ROOT_URLCONF = 'backend.urls'
 AUTH_USER_MODEL = 'api.User'
 
 OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default=None)
+
+GOOGLEMAPS_API_KEY = config('GOOGLEMAPS_API_KEY', default=None)
 
 
 # Installed applications
@@ -88,9 +91,11 @@ DATABASES = {
 # Static and media files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 
 
 # Django REST framework configuration

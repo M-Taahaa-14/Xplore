@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 from .views import (
     signup,
@@ -29,3 +31,4 @@ urlpatterns = [
     path('destinations/add/', DestinationCreateView.as_view(), name='destination-create'),  # POST: create a new destination
     path('destinations/delete/<int:pk>/', DestinationDeleteView.as_view(), name='destination-delete'),  # DELETE: delete a destination by ID
 ]
+

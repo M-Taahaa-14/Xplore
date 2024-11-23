@@ -45,17 +45,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 from django.db import models
 
+from datetime import timedelta
+
 class Destination(models.Model):
-    DestinationId = models.AutoField(primary_key=True)  
+    DestinationId = models.AutoField(primary_key=True)
     Name = models.CharField(max_length=100)
     Region = models.CharField(max_length=100)
     Location = models.CharField(max_length=100)
     Latitude = models.FloatField(null=True, blank=True)
     Longitude = models.FloatField(null=True, blank=True)
     GoogleMapsLink = models.URLField(max_length=1000, null=True, blank=True)
+    Price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    MaxTravellers = models.IntegerField(null=True, blank=True)
+    StartDate = models.DateField(null=True, blank=True)
+    EndDate = models.DateField(null=True, blank=True)
+    Nights = models.IntegerField(default=0)
+    Days = models.IntegerField(default=0)
+    Image = models.ImageField(upload_to='', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.StartDate and self.EndDate:
+            duration = (self.EndDate - self.StartDate).days
+            self.Days = duration
+            self.Nights = max(0, duration - 1)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.Name
+
 
 
 
