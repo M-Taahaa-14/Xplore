@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './BookingPage.css'; 
+
+const loggedInEmail = localStorage.getItem("userEmail");
 
 const BookingPage = () => {
   const { state } = useLocation(); 
@@ -9,11 +12,52 @@ const BookingPage = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: '', // Default empty name
+    loggedInEmail,
     numberOfPeople: 1,
     specialRequests: ''
   });
+
+  const [loading, setLoading] = useState(true); // To manage loading state
+  const [error, setError] = useState(null); // To manage error state
+
+  // Fetch the user's profile using the logged-in email
+  useEffect(() => {
+    if (loggedInEmail) {
+      const fetchUserProfile = async () => {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/user-profile/?email=${loggedInEmail}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            // Update form data with the fetched user's name
+            setFormData((prevData) => ({
+              ...prevData,
+              name: data.user.name || '', // Update name with the fetched name
+            }));
+            setLoading(false);
+          } else {
+            setError("Failed to fetch user profile");
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          setError("Failed to fetch user profile");
+          setLoading(false);
+        }
+      };
+
+      fetchUserProfile();
+    } else {
+      setLoading(false);
+    }
+  }, [loggedInEmail]);
 
   if (!title || !location || !price || !image) {
     return <h2>No details available for the selected tour. Please go back and select again.</h2>;
@@ -26,14 +70,13 @@ const BookingPage = () => {
       [name]: name === 'numberOfPeople' ? parseInt(value, 10) : value, // Convert to number if field is numberOfPeople
     }));
   };
-  
 
   const handleBooking = (e) => {
     e.preventDefault();
 
     const bookingDetails = {
-      name: formData.name,
-      email: formData.email,
+      name: formData.name, // Corrected to formData.name
+      loggedInEmail: formData.loggedInEmail,
       numTickets: formData.numberOfPeople,
       specialRequests: formData.specialRequests
     };
@@ -62,6 +105,10 @@ const BookingPage = () => {
           <p>Price: {price} / day</p>
         </div>
 
+        {/* Show loading state or error if necessary */}
+        {loading && <p>Loading user profile...</p>}
+        {error && <p>{error}</p>}
+
         <form onSubmit={handleBooking} className="booking-form">
           <div className="form-group">
             <label htmlFor="name">Full Name:</label>
@@ -75,14 +122,15 @@ const BookingPage = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="email">Email:</label>
+            <label htmlFor="loggedInEmail">Email:</label>
             <input
               type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              id="loggedInEmail"
+              name="loggedInEmail"
+              value={formData.loggedInEmail}
               onChange={handleInputChange}
               required
+              disabled
             />
           </div>
           <div className="form-group">
