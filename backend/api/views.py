@@ -338,3 +338,39 @@ class DestinationDeleteView(APIView):
             return Response({"error": "Destination not found"}, status=status.HTTP_404_NOT_FOUND)
         
 
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Tour, Destination
+from datetime import datetime
+
+# Fetch Departure Dates Based on Destination
+@api_view(['GET'])
+def get_departure_dates(request):
+    destination_id = request.GET.get('destination_id')
+    
+    if not destination_id:
+        return Response({'error': 'Destination ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        destination = Destination.objects.get(id=destination_id)
+        
+        # Fetch tours that are related to this destination
+        tours = Tour.objects.filter(destination=destination)
+        
+        if not tours.exists():
+            return Response({'error': 'No tours found for the selected destination'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Prepare the departure dates for each tour
+        departure_dates = []
+        for tour in tours:
+            if tour.departure_date:
+                departure_dates.append(tour.departure_date.strftime('%Y-%m-%d'))
+        
+        if not departure_dates:
+            return Response({'error': 'No departure dates available for the selected destination'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'departure_dates': departure_dates}, status=status.HTTP_200_OK)
+    
+    except Destination.DoesNotExist:
+        return Response({'error': 'Destination not found'}, status=status.HTTP_404_NOT_FOUND)

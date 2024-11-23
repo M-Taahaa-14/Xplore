@@ -30,7 +30,7 @@ import Chatbox from './components/ChatRoom.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import CarRental from './components/CarRental';
 import Privacy from './components/PrivacyPolicy.jsx';
-
+import MyBookings from './components/MyBookings.jsx';
 // Layout Components
 const UserLayout = ({ children }) => (
   <>
@@ -231,6 +231,14 @@ const App = () => {
           element={
             <UserLayout>
               <Privacy />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/MyBookings"
+          element={
+            <UserLayout>
+              <MyBookings />
             </UserLayout>
           }
         />

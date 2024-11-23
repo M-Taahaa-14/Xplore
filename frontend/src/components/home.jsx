@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './home.css';
 
 const Home = () => {
   const [destination, setDestination] = useState('');
+  const [destinations, setDestinations] = useState([]); // State for storing destination names
   const [departures] = useState([]);
-  const [isChatOpen, setIsChatOpen] = useState(false); // State for toggling chat screen visibility
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  // Fetch destination names from the backend
+  useEffect(() => {
+    axios.get('http://127.0.0.1:8000/api/destinations/')
+      .then(response => {
+        // Assuming response.data contains an array of destinations
+        setDestinations(response.data.map(destination => destination.Name)); // Only store the names
+      })
+      .catch(error => {
+        console.error("Error fetching destinations:", error);
+      });
+  }, []);
 
   const handleDestinationChange = (e) => {
     setDestination(e.target.value);
@@ -31,7 +45,9 @@ const Home = () => {
             <form>
               <select value={destination} onChange={handleDestinationChange}>
                 <option value="" disabled>Select a Destination</option>
-                {/* Add destination options here */}
+                {destinations.map((destination, index) => (
+                  <option key={index} value={destination}>{destination}</option> // Populate dropdown with destination names
+                ))}
               </select>
 
               <select value={departures}>
