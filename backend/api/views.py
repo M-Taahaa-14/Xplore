@@ -11,8 +11,6 @@ from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateS
 import requests
 from django.conf import settings
 
-
-
 # User Signup
 @api_view(['POST'])
 def signup(request):
@@ -210,9 +208,6 @@ def get_user_bookings(request):
     except Exception as e:
         return Response({'error': f"An error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-
-
 # View Booking
 class BookingListView(APIView):
     # GET request to fetch all bookings
@@ -220,9 +215,6 @@ class BookingListView(APIView):
         bookings = Booking.objects.all()
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
 
 # Update Booking Status
 class UpdateBookingStatusView(APIView):
@@ -252,8 +244,6 @@ class DestinationListView(APIView):
         serializer = DestinationSerializer(destinations, many=True)
         return Response(serializer.data)
     
-
-
 
 
 from datetime import datetime
@@ -346,3 +336,5 @@ class DestinationDeleteView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except Destination.DoesNotExist:
             return Response({"error": "Destination not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+

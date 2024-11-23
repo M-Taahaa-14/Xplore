@@ -1,0 +1,235 @@
+.car-rental-container {
+    font-family: Arial, sans-serif;
+  }
+  
+  .top-banner {
+    background-color: #0b8245;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .header-menu {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .user-icon {
+    background-color: #128d52;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .search-section {
+    background-color: #067845;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .search-section h1 {
+    margin: 0;
+    font-size: 32px;
+  }
+  
+  .search-section p {
+    margin: 10px 0 20px;
+  }
+  
+  .search-tabs {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .search-tabs span {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .search-tabs span.active {
+    border-bottom: 2px solid white;
+  }
+  
+  .city-options {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .search-form {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .input-field {
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    flex: 1;
+  }
+  
+  .search-button {
+    background-color: #ffc107;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .cars-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .car-card {
+    display: flex;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .car-image {
+    width: 300px;
+  }
+  
+  .car-image img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .car-details {
+    flex: 1;
+  }
+  
+  .car-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .car-category {
+    color: #666;
+  }
+  
+  .car-specs {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .car-protection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .protection-tag {
+    background-color: #e3f2fd;
+    color: #046b40;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .car-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .price {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .price-period {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .book-button {
+    background-color: #097a41;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .highlights-section {
+    margin: 40px 0;
+  }
+  
+  .highlights-section h2 {
+    margin-bottom: 20px;
+  }
+  
+  .highlights-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .highlights-section li {
+    margin-bottom: 10px;
+    color: #666;
+  }
+  
+  .service-cards {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+  }
+  
+  .service-card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    text-align: center;
+  }
+  
+  .service-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .service-card h3 {
+    margin: 10px 0;
+  }
+  
+  .service-card p {
+    color: #666;
+    margin: 0;
+  }

@@ -1,5 +1,4 @@
 import './App.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Import your components
@@ -21,52 +20,216 @@ import ManageDestinations from './components/ManageDestinations.jsx';
 import ManageTours from './components/ManageTours.jsx';
 import Review from './components/Review.jsx';
 import ContactUs from './components/ContactUs.jsx';
-import SideBar from './components/adminSideBar.jsx'; // Assuming this is for admin routes
+import SideBar from './components/adminSideBar.jsx';
 import TourGuide from './components/TourGuide.jsx';
 import TermsOfService from './components/TermsOfService.jsx';
 import BookingPage from './components/BookingPage.jsx';
 import PaymentPage from './components/PaymentPage.jsx';
 import WeatherForecast from './components/WeatherForecast.jsx';
+import Chatbox from './components/ChatRoom.jsx';
+import Sidebar from './components/Sidebar.jsx';
+import CarRental from './components/CarRental';
+
+// Layout Components
+const UserLayout = ({ children }) => (
+  <>
+    <Sidebar />
+    <Header />
+    <main>{children}</main>
+    <Footer />
+  </>
+);
+
+const AdminLayout = ({ children }) => (
+  <>
+    <SideBar />
+    <main>{children}</main>
+  </>
+);
 
 const App = () => {
   return (
     <Router>
-        <Routes>
+      <Routes>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        </Routes>
-      <Header /> {/* Header for both client */}
-      {/* <SideBar/> */}
-      <Routes>
-        {/* Client-side routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/tours" element={<Tours />} />
-        <Route path="/trek" element={<Trek />} />
-        <Route path="/feedback" element={<Feedback />} />
-        <Route path="/faqs" element={<FAQs />} />
-        <Route path="/aboutus" element={<AboutUs />} />
-        <Route path="/userprofile" element={<UserProfile />} />
-        <Route path="/contactus" element={<ContactUs />} />
-        <Route path="/signnew" element={<SignNew />} />
-        <Route path="/tourguide" element={<TourGuide />} />
-        <Route path="/termsofservice" element={<TermsOfService />} />
-        <Route path="/booking" element={<BookingPage />} />
-        <Route path="/payment" element={<PaymentPage />} />
-        <Route path="/weather" element={<WeatherForecast />} />
-        {/* Admin-side routes */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/managebookings" element={<ManageBookings />} />
-        <Route path="/managedestinations" element={<ManageDestinations />} />
-        <Route path="/managetours" element={<ManageTours />} />
-        <Route path="/review" element={<Review />} />
 
+        {/* Admin routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managebookings"
+          element={
+            <AdminLayout>
+              <ManageBookings />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managedestinations"
+          element={
+            <AdminLayout>
+              <ManageDestinations />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managetours"
+          element={
+            <AdminLayout>
+              <ManageTours />
+            </AdminLayout>
+          }
+        />
+
+        {/* User routes */}
+        <Route
+          path="/home"
+          element={
+            <UserLayout>
+              <Home />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/tours"
+          element={
+            <UserLayout>
+              <Tours />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/trek"
+          element={
+            <UserLayout>
+              <Trek />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/feedback"
+          element={
+            <UserLayout>
+              <Feedback />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <UserLayout>
+              <FAQs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/aboutus"
+          element={
+            <UserLayout>
+              <AboutUs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/userprofile"
+          element={
+            <UserLayout>
+              <UserProfile />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/contactus"
+          element={
+            <UserLayout>
+              <ContactUs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/signnew"
+          element={
+            <UserLayout>
+              <SignNew />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/tourguide"
+          element={
+            <UserLayout>
+              <TourGuide />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/termsofservice"
+          element={
+            <UserLayout>
+              <TermsOfService />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/booking"
+          element={
+            <UserLayout>
+              <BookingPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <UserLayout>
+              <PaymentPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/weather"
+          element={
+            <UserLayout>
+              <WeatherForecast />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/review"
+          element={
+            <UserLayout>
+              <Review />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <UserLayout>
+              <Chatbox />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/car"
+          element={
+            <UserLayout>
+              <CarRental />
+            </UserLayout>
+          }
+        />
         {/* Default route */}
         <Route path="*" element={<Login />} />
       </Routes>
-
-      <Footer /> {/* Footer for both client and admin */}
     </Router>
   );
-}
+};
 
 export default App;

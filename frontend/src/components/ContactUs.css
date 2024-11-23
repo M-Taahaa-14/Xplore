@@ -74,10 +74,10 @@
 }
 
 .contact-info {
-  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  /* background-color: rgba(255, 255, 255, 0.8); Semi-transparent white */
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  /* border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
   text-align: left;
 }
 

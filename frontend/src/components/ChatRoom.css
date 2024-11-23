@@ -1,0 +1,133 @@
+/* Overall container styling */
+.chat-container {
+    max-width: 600px;
+    margin: 20px auto; /* Added margin to separate the component */
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added shadow for a polished look */
+  }
+  
+  /* Header styling */
+  .chat-header {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 20px; /* Adjusted padding */
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  /* Messages container */
+  .chat-messages {
+    flex: 1;
+    padding: 15px 20px; /* Reduced padding for tighter layout */
+    background-color: #f8f9fa;
+    overflow-y: auto;
+    max-height: 400px;
+    border-bottom: 1px solid #ddd; /* Added separator for better structure */
+  }
+  
+  /* Message styling */
+  .chat-message {
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%; /* Adjusted width for better spacing */
+    word-wrap: break-word;
+    position: relative;
+  }
+  
+  /* Bot message styling */
+  .bot-message {
+    background-color: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+  }
+  
+  /* User message styling */
+  .user-message {
+    background-color: #28a745;
+    color: white;
+    align-self: flex-end;
+  }
+  
+  /* Time styling */
+  .chat-time {
+    display: block;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: right;
+    opacity: 0.7;
+  }
+  
+  /* Input section */
+  .chat-input {
+    display: flex;
+    align-items: center; /* Vertically aligns items */
+    gap: 10px; /* Spacing between input and button */
+    padding: 10px 15px;
+    background-color: white;
+    border-top: 1px solid #ddd;
+  }
+  
+  .chat-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none; /* Removed outline for cleaner focus */
+    font-size: 14px;
+  }
+  
+  .chat-input input:focus {
+    border-color: #28a745;
+  }
+  
+  .chat-input button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .chat-input button:hover {
+    background-color: #218838;
+  }
+  
+  /* Footer styling for Contact Us section */
+  .footer {
+    background-color: #28a745;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between; /* Evenly spreads links */
+    flex-wrap: wrap; /* Handles responsiveness */
+    gap: 15px;
+  }
+  
+  .footer div {
+    flex: 1;
+    text-align: center; /* Centers content */
+  }
+  
+  .footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  

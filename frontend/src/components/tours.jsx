@@ -81,7 +81,7 @@ const Tours = () => {
     <div>
       <section className="user-info">
         {/* Display the logged-in user's email or NULL if not found */}
-        <p>Email: {displayEmail}</p>
+        {/* <p>Email: {displayEmail}</p> */}
         {/* Display user details if they exist */}
         {userDetails && (
           <div>
@@ -93,7 +93,7 @@ const Tours = () => {
       </section>
 
       <section className="featured-liveaboards">
-        <h2>Our Destinations</h2>
+        <h2>Tours</h2>
         <div className="liveaboard-cards">
           {destinations.map((destination, index) => (
             <TourCard

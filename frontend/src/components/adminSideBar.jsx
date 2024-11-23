@@ -6,8 +6,6 @@ const adminSideBar = () => {
   return (
     <div className="admin-dashboard">
         <div id="sidebar" className="sidebar">
-            {/* Uncomment the toggle button if you implement the sidebar toggle functionality */}
-            {/* <button className="toggle-btn" onClick={toggleSidebar}>☰</button> */}
             <Link to ="/admin" className="active">🏠 Admin Dashboard</Link>
             <Link to ="#">👥 Manage Users</Link> {/*manageusers page not yet added */}
             <Link to ="/managedestinations">🗺️ Manage Destinations</Link>

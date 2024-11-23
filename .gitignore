@@ -49,3 +49,6 @@ __pycache__/
 
 # Ignore log files
 *.log
+
+venv/
+env/
