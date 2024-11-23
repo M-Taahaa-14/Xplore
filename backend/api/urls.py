@@ -26,6 +26,7 @@ urlpatterns = [
     path('bookings/status/<int:booking_id>/', UpdateBookingStatusView.as_view(), name='update-booking-status'),
     path('user-bookings/', views.get_user_bookings, name='get_user_bookings'),
     path('weather/', WeatherForecastView.as_view(), name='weather-forecast'),
+     path('ask/', views.ask_open_gemini, name='ask_open_gemini'),
 
     path('destinations/', DestinationListView.as_view(), name='destination-list'),  # GET: list all destinations
     path('destinations/add/', DestinationCreateView.as_view(), name='destination-create'),  # POST: create a new destination

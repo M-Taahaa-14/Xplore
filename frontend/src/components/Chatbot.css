@@ -1,0 +1,57 @@
+.chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 350px;
+  }
+  
+  .chatbot-header h4 {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .chatbot-messages {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+  }
+  
+  .message {
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 12px;
+    background-color: #f0f0f0;
+  }
+  
+  .message.AI {
+    background-color: #e1f5fe;
+  }
+  
+  .message.You {
+    background-color: #ffecb3;
+  }
+  
+  input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  

@@ -31,6 +31,7 @@ import Sidebar from './components/Sidebar.jsx';
 import CarRental from './components/CarRental';
 import Privacy from './components/PrivacyPolicy.jsx';
 import MyBookings from './components/MyBookings.jsx';
+import Chatbot from './components/Chatbot.jsx'
 // Layout Components
 const UserLayout = ({ children }) => (
   <>
@@ -114,6 +115,14 @@ const App = () => {
             </UserLayout>
           }
         />
+        <Route
+          path="/Chatbot"
+          element={
+            <UserLayout>
+              <Chatbot />
+            </UserLayout>
+          }
+        />        
         <Route
           path="/feedback"
           element={

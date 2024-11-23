@@ -374,3 +374,37 @@ def get_departure_dates(request):
     
     except Destination.DoesNotExist:
         return Response({'error': 'Destination not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+    import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+# OpenGeminiAPI endpoint URL (replace with the actual URL from the OpenGeminiAPI documentation)
+OPEN_GEMINI_API_URL = "https://api.opengemini.com/query"  # Change this to the correct API endpoint
+
+@csrf_exempt  # Disables CSRF validation for this view, typically used for API endpoints
+def ask_open_gemini(request):
+    if request.method == 'POST':
+        try:
+            # Parse the incoming JSON request body
+            data = json.loads(request.body)
+            question = data.get("question")
+            
+            # Make a request to the OpenGeminiAPI
+            if question:
+                response = requests.post(OPEN_GEMINI_API_URL, json={"query": question})
+                response_data = response.json()
+                
+                # Extract the answer from OpenGeminiAPI's response
+                answer = response_data.get("answer", "Sorry, I couldn't find an answer to your question.")
+                return JsonResponse({"answer": answer}, status=200)
+            else:
+                return JsonResponse({"error": "No question provided"}, status=400)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid method. Use POST."}, status=405)
+
