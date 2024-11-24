@@ -113,7 +113,7 @@ const UserProfile = () => {
               <thead>
                 <tr>
                   <th>Tour Name</th>
-                  <th>Departure City</th>
+                  <th>Destination City</th>
                   <th>Booking Date</th>
                   <th>Booking Status</th>
                   <th>Travel Date</th>

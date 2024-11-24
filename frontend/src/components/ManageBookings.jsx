@@ -90,7 +90,7 @@ const ManageBookings = () => {
                   <th>Booking ID</th>
                   <th>User Email</th>
                   <th>Destination ID</th>
-                  <th>Departure</th>
+                  <th>Destination City</th>
                   <th>Booking Date</th>
                   <th>Travel Date</th>
                   <th>Tickets</th>
@@ -161,7 +161,7 @@ const ManageBookings = () => {
             <input
               type="text"
               name="Departure"
-              placeholder="Departure"
+              placeholder="Destination City"
               value={newBooking.Departure}
               onChange={handleInputChange}
             />
