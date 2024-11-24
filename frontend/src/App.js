@@ -31,7 +31,8 @@ import Sidebar from './components/Sidebar.jsx';
 import CarRental from './components/CarRental';
 import Privacy from './components/PrivacyPolicy.jsx';
 import MyBookings from './components/MyBookings.jsx';
-import Chatbot from './components/Chatbot.jsx'
+import Chatbot from './components/Chatbot.jsx';
+import AdminQueryResponse from './components/AdminQueryResponse.jsx';
 // Layout Components
 const UserLayout = ({ children }) => (
   <>
@@ -89,7 +90,14 @@ const App = () => {
             </AdminLayout>
           }
         />
-
+        <Route
+          path="/AdminQuery"
+          element={
+            <AdminLayout>
+              <AdminQueryResponse />
+            </AdminLayout>
+          }
+        />
         {/* User routes */}
         <Route
           path="/home"

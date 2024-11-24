@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import user_icon from '../images/icons8-name-50.png';
+import email_icon from '../images/icons8-email-30.png';
+import password_icon from '../images/icons8-password-50.png';
+import './signnew.css'; // Import CSS for styling
 
-const Signup = () => {
+const SignUp = () => {
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -15,7 +19,7 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [isHovered, setIsHovered] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -79,26 +83,81 @@ const Signup = () => {
 
   return (
     <div style={styles.page}>
-      <main style={styles.main}>
-        <div style={styles.container}>
-          <h2>Create New Account</h2>
-          
-          {['name', 'username', 'phoneNum', 'dob', 'email', 'password', 'confirmPassword'].map((field) => (
-            <div key={field} style={styles.formGroup}>
-              <label htmlFor={field}>{field.replace(/([A-Z])/g, ' $1')}</label>
-              <input
-                id={field}
-                type={field === 'password' || field === 'confirmPassword' ? 'password' : field === 'dob' ? 'date' : 'text'}
-                placeholder={`Enter your ${field}`}
-                value={formData[field]}
-                onChange={handleInputChange}
-                style={styles.input}
-              />
-            </div>
-          ))}
-
-          <div style={styles.formGroup}>
-            <label htmlFor="gender">Gender</label>
+      <div className="container">
+        <div className="header">
+          <div className="text">Sign Up Now!</div>
+          <div className="underline"></div>
+        </div>
+        <div className="inputs">
+          <div className="input">
+            <img src={user_icon} alt="" />
+            <input
+              id="name"
+              type="text"
+              placeholder="Enter your name here."
+              value={formData.name}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <img src={user_icon} alt="" />
+            <input
+              id="username"
+              type="text"
+              placeholder="Enter your username here."
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <img src={email_icon} alt="" />
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter your email here."
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <img src={password_icon} alt="" />
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password here."
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <img src={password_icon} alt="" />
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm your password."
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <input
+              id="phoneNum"
+              type="text"
+              placeholder="Enter your phone number."
+              value={formData.phoneNum}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
+            <input
+              id="dob"
+              type="date"
+              placeholder="Enter your date of birth."
+              value={formData.dob}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input">
             <select
               id="gender"
               value={formData.gender}
@@ -110,26 +169,23 @@ const Signup = () => {
               <option value="F">Female</option>
             </select>
           </div>
-
-          <button
-            style={isHovered ? { ...styles.button, ...styles.buttonHover } : styles.button}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={handleSubmit}
-          >
-            Signup
-          </button>
-
-          {error && <p style={styles.error}>{error}</p>}
-
-          <p>Have an account? <a href="/login">Log In</a></p>
         </div>
-      </main>
+        <button
+          style={isHovered ? { ...styles.button, ...styles.buttonHover } : styles.button}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={handleSubmit}
+        >
+          Signup
+        </button>
+        {error && <p style={styles.error}>{error}</p>}
+        <p>Already have an account? <a href="/login">Log In</a></p>
+      </div>
     </div>
   );
 };
 
-// Inline CSS styles
+// Inline styles for background and layout
 const styles = {
   page: {
     display: 'flex',
@@ -139,35 +195,6 @@ const styles = {
     backgroundSize: 'cover', 
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-  },
-  main: {
-    flex: 1,
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: '#000'
-  },
-  container: {
-    padding: '20px',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    width: '60%',
-    maxWidth: '600px',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    fontSize: 18,
-  },
-  formGroup: {
-    marginBottom: '15px',
-  },
-  input: {
-    width: '90%',
-    padding: '10px',
-    border: '1px solid #ccc',
-    borderRadius: '5px',
   },
   button: {
     padding: '10px',
@@ -187,7 +214,14 @@ const styles = {
   error: {
     color: 'red',
     marginTop: '10px',
-  }
+  },
+  input: {
+    margin: '10px 0',
+    padding: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ddd',
+    fontSize: '16px',
+  },
 };
 
-export default Signup;
+export default SignUp;
