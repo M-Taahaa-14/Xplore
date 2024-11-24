@@ -6,7 +6,7 @@ import axios from 'axios';
 // Fetch logged-in email once, outside of the component
 const loggedInEmail = localStorage.getItem("userEmail");
 
-const TourCard = ({ image, title, location, price, reviews, rating, loggedInEmail, DestinationId }) => {
+const TourCard = ({ image, title, location, price, reviews, rating, loggedInEmail, DestinationId, startDate }) => {
   const navigate = useNavigate();
 
   const addToWishlist = (tourName) => {
@@ -23,6 +23,7 @@ const TourCard = ({ image, title, location, price, reviews, rating, loggedInEmai
         image, 
         loggedInEmail, // Pass the user details (email in this case)
         DestinationId,  // Pass the DestinationId
+        startDate,
       },
     });
   };
@@ -107,6 +108,7 @@ const Tours = () => {
               rating={destination.rating || 'N/A'} // Default to 'N/A' if no rating
               loggedInEmail={loggedInEmail} // Pass loggedInEmail to TourCard
               DestinationId={destination.DestinationId} // Pass DestinationId to TourCard
+              startDate={destination.startDate || ''} // Pass startDate (if available) to TourCard
             />
           ))}
         </div>

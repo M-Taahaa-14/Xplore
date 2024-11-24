@@ -204,6 +204,7 @@ body, html {
 
 .form-group input,.form-group select {
     padding: 15px;
+    margin-left: 100px;
 }
 .form-group button {
     width: 100%;

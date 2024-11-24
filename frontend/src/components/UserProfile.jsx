@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
 import EditProfileForm from "./EditProfileForm";
+import { useNavigate } from "react-router-dom";
 
 // Function to calculate the user's age based on their date of birth
 const calculateAge = (dob) => {
@@ -15,6 +16,8 @@ const calculateAge = (dob) => {
 };
 
 const UserProfile = () => {
+  const navigate = useNavigate();
+
   const [userProfile, setUserProfile] = useState({});
   const [bookings, setBookings] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -112,8 +115,8 @@ const UserProfile = () => {
             <table>
               <thead>
                 <tr>
+                  <th>Tour ID</th>
                   <th>Tour Name</th>
-                  <th>Destination City</th>
                   <th>Booking Date</th>
                   <th>Booking Status</th>
                   <th>Travel Date</th>
@@ -123,13 +126,13 @@ const UserProfile = () => {
               <tbody>
                 {bookings.map((booking, index) => (
                   <tr key={index}>
-                    <td>{booking.DestinationId}</td> {/* Correct field names from API */}
+                    <td>{booking.DestinationId}</td>
                     <td>{booking.Departure}</td>
                     <td>{booking.BookingDate}</td>
                     <td>{booking.Status}</td>
                     <td>{booking.TravelDate}</td>
                     <td>
-                      <button onClick={() => alert("Give Review")}>Give Review</button>
+                      <button onClick={() => navigate("/feedback")}>Give Review</button>
                     </td>
                   </tr>
                 ))}

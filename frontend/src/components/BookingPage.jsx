@@ -136,15 +136,6 @@ const BookingPage = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="specialRequests">Special Requests:</label>
-            <textarea
-              id="specialRequests"
-              name="specialRequests"
-              value={formData.specialRequests}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group">
             <label htmlFor="travelDate">Travel Date:</label>
             <input
               type="date"

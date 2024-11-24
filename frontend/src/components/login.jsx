@@ -1,3 +1,111 @@
+// import React, { useState } from 'react';
+// import { useNavigate, Link } from 'react-router-dom';
+// import axios from 'axios';
+// import './login.css'; // Assuming you will create a new stylesheet for styles
+
+// const Login = () => {
+//   const navigate = useNavigate();
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const [isAdmin, setIsAdmin] = useState(false);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     // Check if both fields are filled
+//     if (!email || !password) {
+//       setError('Email and Password are required');
+//       return;
+//     }
+//     setError('');
+
+//     try {
+//       const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+//         email,
+//         password,
+//       });
+
+//       if (response.status === 200) {
+//         console.log('Login successful:', response.data);
+
+//         // Store email in localStorage for session management
+//         localStorage.setItem('userEmail', email);
+//         localStorage.setItem('userType', isAdmin ? 'admin' : 'user');
+
+//         // Redirect based on user type
+//         navigate(isAdmin ? '/admin-dashboard' : '/home');
+//       }
+//     } catch (error) {
+//       // Set the error message from server response or a default error
+//       setError(
+//         error.response?.data?.error || 'Login failed. Please check your credentials.'
+//       );
+//       console.error('Login error:', error);
+//     }
+//   };
+
+//   return (
+//     <div className="login-container">
+//       <form onSubmit={handleSubmit} className="login-form">
+//         <div className="form-header">
+//           <h2>{isAdmin ? 'Admin Login' : 'User Login'}</h2>
+//           <div className="toggle-container">
+//             <label className="switch">
+//               <input
+//                 type="checkbox"
+//                 checked={isAdmin}
+//                 onChange={() => setIsAdmin(!isAdmin)}
+//               />
+//               <span className="slider round"></span>
+//             </label>
+//             <span className="toggle-label">
+//               {isAdmin ? 'Switch to User' : 'Switch to Admin'}
+//             </span>
+//           </div>
+//         </div>
+
+//         <div className="login-form-group">
+//           <label htmlFor="loginEmail">Email</label>
+//           <input
+//             id="loginEmail"
+//             type="email"
+//             placeholder="Enter your email"
+//             value={email}
+//             onChange={(e) => setEmail(e.target.value)}
+//             required
+//           />
+//         </div>
+
+//         <div className="login-form-group">
+//           <label htmlFor="loginPassword">Password</label>
+//           <input
+//             id="loginPassword"
+//             type="password"
+//             placeholder="Enter your password"
+//             value={password}
+//             onChange={(e) => setPassword(e.target.value)}
+//             required
+//           />
+//         </div>
+
+//         {error && <p className="error-message">{error}</p>}
+
+//         <button type="submit" className="login-button">
+//           Login
+//         </button>
+
+//         <p>
+//           Don't have an account? <Link to="/signup">Signup</Link>
+//         </p>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default Login;
+
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
