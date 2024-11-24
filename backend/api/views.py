@@ -62,6 +62,7 @@ def get_user_by_email(request):
             'PhoneNumber': user.phone_num,
             'Gender': user.gender,
         }
+        
         return Response({'user': user_data}, status=status.HTTP_200_OK)
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -151,44 +152,65 @@ def get_user_wishlist(request):
             })
         return JsonResponse({'wishlist': wishlist_data})
     return JsonResponse({'error': 'Username parameter is required'}, status=400)
-
 # Add a Booking
-
 class AddBookingView(APIView):
     def post(self, request):
         # Extract data from the request
-        user_username = request.data.get('User')  # User refers to the username
-        tour_name = request.data.get('Tour')     # Tour refers to the user's name
+        user_email = request.data.get('UserEmail')  # Validate and use email
+        destination_id = request.data.get('DestinationId')  # Destination ID for the booking
         departure = request.data.get('Departure')
         travel_date = request.data.get('TravelDate')
         booking_date = request.data.get('BookingDate')
         status = request.data.get('Status')
-        print(user_username)
+        tickets = request.data.get('Tickets')  # Number of tickets
+        price_per_head = request.data.get('PricePerHead')  # Price per ticket (Price per head)
+
+        print(request.data)
+        
         try:
-            # Fetch user by username
-            user = User.objects.get(username=user_username)
+            # Fetch user by email
+            user = User.objects.get(email=user_email)
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        # Ensure price_per_head and tickets are integers (or floats for price_per_head if it's not a whole number)
+        try:
+            price_per_head = float(price_per_head)  # Convert to float if it's a decimal value
+            tickets = int(tickets)  # Convert tickets to integer
+        except ValueError:
+            return Response({"error": "Invalid data for price or tickets"}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Calculate the total price (Price = Ticket count * Price per head)
+        total_price = price_per_head * tickets
+        print(f"Calculated Total Price: {total_price}")
+
+        # Convert total_price back to string if needed
+        total_price_str = str(total_price)
+
         # Prepare the data for booking creation
         booking_data = {
-            'User': user_username,           # Store the user object (not just the username)
-            'Tour': tour_name,      # Store the tour name as a string
+            'UserEmail': user_email,
+            'DestinationId': destination_id,
             'Departure': departure,
             'TravelDate': travel_date,
-            'BookingDate': booking_date,  # BookingDate can be passed, or auto-generated
-            'Status': status,
+            'BookingDate': booking_date or None,  # Allow passing of booking date or auto-generated
+            'Status': status or 'Pending',  # Default to 'Pending' if no status is provided
+            'Tickets': tickets,
+            'Price': total_price_str  # Save the calculated total price as a string
         }
         
+        
+
         # Serialize the data using the BookingSerializer
-        serializer = BookingSerializer(data=booking_data)     
+        serializer = BookingSerializer(data=booking_data)
         if serializer.is_valid():
             # Save the booking and return the serialized data as a response
             booking = serializer.save()
-            print(f"Assigned BookingId: {serializer.data}")
+            print(f"Assigned BookingId: {booking.BookingId}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)  # Use 201 for created status
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def get_user_bookings(request):

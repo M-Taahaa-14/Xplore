@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -72,6 +73,10 @@ class Destination(models.Model):
     def __str__(self):
         return self.Name
 
+
+
+
+
 class Tour(models.Model):
     TourId = models.IntegerField(primary_key=True)
     TourName = models.CharField(max_length=100)
@@ -84,16 +89,19 @@ class Tour(models.Model):
     Days = models.IntegerField()
 
 class Booking(models.Model):
-    BookingId = models.AutoField(primary_key=True)  
-    User = models.CharField(max_length=100)         
-    Tour = models.CharField(max_length=100)         # Store the tour name as a string
+    BookingId = models.AutoField(primary_key=True)
+    UserEmail = models.EmailField(max_length=100 ,default='fahad@gamil.com')  # Store the user email
+    DestinationId = models.CharField(max_length=100)  # Store the DestinationId (e.g., tour ID)
     Departure = models.CharField(max_length=100)    # Departure location (string)
     BookingDate = models.DateField(auto_now_add=True)  # Automatically set when booking is created
     TravelDate = models.DateField()                  # Travel date (DateField)
     Status = models.CharField(max_length=20, default='Pending')  # Status of the booking (e.g., 'Pending', 'Confirmed')
+    Tickets = models.IntegerField() 
+    Price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
-        return f"Booking {self.BookingId} for {self.User} to {self.Tour}"
+        return f"Booking {self.BookingId} for {self.UserEmail} to {self.DestinationId}"
+
 
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
@@ -105,11 +113,3 @@ class Wishlist(models.Model):
 
     class Meta:
         unique_together = ('user', 'tour')  # Ensure each user can only add a tour once to their wishlist
-
-    class Message(models.Model):
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        content = models.TextField()
-        timestamp = models.DateTimeField(auto_now_add=True)
-
-        def __str__(self):
-            return self.content[:50]

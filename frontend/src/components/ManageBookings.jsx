@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './ManageBookings.css';
 
-
-
 const ManageBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [newBooking, setNewBooking] = useState({
-    User: '',
-    Tour: '',
+    UserEmail: '',
+    DestinationId: '',
     Departure: '',
     TravelDate: '',
+    Tickets: 1, // Default number of tickets is 1
+    PricePerHead: 0, // New field for price per head
   });
 
   // Fetch all bookings from the API
@@ -39,9 +39,9 @@ const ManageBookings = () => {
 
   // Add a new booking and refresh data
   const addBooking = async () => {
-    const { User, Tour, Departure, TravelDate } = newBooking;
+    const { UserEmail, DestinationId, Departure, TravelDate, Tickets, PricePerHead } = newBooking;
 
-    if (!User || !Tour || !Departure || !TravelDate) {
+    if (!UserEmail || !DestinationId || !Departure || !TravelDate || !Tickets || !PricePerHead) {
       alert('All fields are required to add a booking.');
       return;
     }
@@ -52,12 +52,12 @@ const ManageBookings = () => {
         BookingDate: new Date().toISOString().split('T')[0], // Set the current date
         Status: 'Pending', // Default status
       });
-      setNewBooking({ User: '', Tour: '', Departure: '', TravelDate: '' }); // Clear the form
+      setNewBooking({ UserEmail: '', DestinationId: '', Departure: '', TravelDate: '', Tickets: 1, PricePerHead: 0 }); // Clear the form
       fetchBookings(); // Refresh bookings
     } catch (error) {
       console.error('Error adding booking:', error.message);
       fetchBookings(); // Refresh bookings
-      //alert('Failed to add booking. Please check your input and try again.');   //open when isuue resolved
+      //alert('Failed to add booking. Please check your input and try again.'); // Uncomment when issue is resolved
     }
   };
 
@@ -88,11 +88,13 @@ const ManageBookings = () => {
               <thead>
                 <tr>
                   <th>Booking ID</th>
-                  <th>User</th>
-                  <th>Tour</th>
+                  <th>User Email</th>
+                  <th>Destination ID</th>
                   <th>Departure</th>
                   <th>Booking Date</th>
                   <th>Travel Date</th>
+                  <th>Tickets</th>
+                  <th>Price Per Head</th> {/* Display Price per head */}
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -102,11 +104,13 @@ const ManageBookings = () => {
                   bookings.map((booking) => (
                     <tr key={booking.BookingId}>
                       <td>{booking.BookingId}</td>
-                      <td>{booking.User}</td>
-                      <td>{booking.Tour}</td>
+                      <td>{booking.UserEmail}</td>
+                      <td>{booking.DestinationId}</td>
                       <td>{booking.Departure}</td>
                       <td>{booking.BookingDate}</td>
                       <td>{booking.TravelDate}</td>
+                      <td>{booking.Tickets}</td> {/* Display Tickets */}
+                      <td>{booking.Price}</td> {/* Display Price Per Head */}
                       <td>{booking.Status}</td>
                       <td>
                         {booking.Status === 'Pending' && (
@@ -130,7 +134,7 @@ const ManageBookings = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8">No bookings available.</td>
+                    <td colSpan="10">No bookings available.</td>
                   </tr>
                 )}
               </tbody>
@@ -141,17 +145,17 @@ const ManageBookings = () => {
           <div className="form-section">
             <h3>Add New Booking</h3>
             <input
-              type="text"
-              name="User"
-              placeholder="Username"
-              value={newBooking.User}
+              type="email"
+              name="UserEmail"
+              placeholder="User Email"
+              value={newBooking.UserEmail}
               onChange={handleInputChange}
             />
             <input
               type="text"
-              name="Tour"
-              placeholder="Tour Name"
-              value={newBooking.Tour}
+              name="DestinationId"
+              placeholder="Destination ID"
+              value={newBooking.DestinationId}
               onChange={handleInputChange}
             />
             <input
@@ -164,9 +168,24 @@ const ManageBookings = () => {
             <input
               type="date"
               name="TravelDate"
-              placeholder="Travel Date"
               value={newBooking.TravelDate}
               onChange={handleInputChange}
+            />
+            <input
+              type="number"
+              name="Tickets"
+              placeholder="Number of Tickets"
+              value={newBooking.Tickets}
+              onChange={handleInputChange}
+              min="1"
+            />
+            <input
+              type="number"
+              name="PricePerHead"
+              placeholder="Price Per Head"
+              value={newBooking.PricePerHead}
+              onChange={handleInputChange}
+              min="0"
             />
             <button className="btn" onClick={addBooking}>
               Add Booking

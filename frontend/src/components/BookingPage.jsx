@@ -1,45 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './BookingPage.css'; 
-
-const loggedInEmail = localStorage.getItem("userEmail");
+import './BookingPage.css';
 
 const BookingPage = () => {
-  const { state } = useLocation(); 
-  const { title, location, price, image } = state || {}; 
-
+  const { state } = useLocation();
+  const { DestinationId, title, location, price, image, loggedInEmail } = state || {};
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    name: '', // Default empty name
-    loggedInEmail,
+    name: '',
+    loggedInEmail: loggedInEmail || '',
     numberOfPeople: 1,
-    specialRequests: ''
+    specialRequests: '',
+    travelDate: '', // Added travel date
   });
 
-  const [loading, setLoading] = useState(true); // To manage loading state
-  const [error, setError] = useState(null); // To manage error state
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch the user's profile using the logged-in email
   useEffect(() => {
     if (loggedInEmail) {
       const fetchUserProfile = async () => {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/api/user-profile/?email=${loggedInEmail}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-
+          const response = await fetch(`http://127.0.0.1:8000/api/user-profile/?email=${loggedInEmail}`);
           if (response.ok) {
             const data = await response.json();
-            // Update form data with the fetched user's name
             setFormData((prevData) => ({
               ...prevData,
-              name: data.user.name || '', // Update name with the fetched name
+              name: data.user.Name || '',
             }));
             setLoading(false);
           } else {
@@ -59,7 +47,7 @@ const BookingPage = () => {
     }
   }, [loggedInEmail]);
 
-  if (!title || !location || !price || !image) {
+  if (!DestinationId || !title || !location || !price || !image) {
     return <h2>No details available for the selected tour. Please go back and select again.</h2>;
   }
 
@@ -67,7 +55,7 @@ const BookingPage = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === 'numberOfPeople' ? parseInt(value, 10) : value, // Convert to number if field is numberOfPeople
+      [name]: name === 'numberOfPeople' ? parseInt(value, 10) : value,
     }));
   };
 
@@ -75,23 +63,27 @@ const BookingPage = () => {
     e.preventDefault();
 
     const bookingDetails = {
-      name: formData.name, // Corrected to formData.name
+      DestinationId,
+      name: formData.name,
       loggedInEmail: formData.loggedInEmail,
       numTickets: formData.numberOfPeople,
-      specialRequests: formData.specialRequests
+      specialRequests: formData.specialRequests,
+      travelDate: formData.travelDate, // Added travel date
     };
 
-    // Store booking details in sessionStorage
     sessionStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
 
-    // Navigate to the payment page and pass data
     navigate('/payment', {
       state: {
+        bookingDetails, // Passing bookingDetails object to payment page
         title,
         location,
         price: parseFloat(price),
-        image
-      }
+        image,
+        loggedInEmail,
+        travelDate: formData.travelDate, // Pass travel date to payment page
+        DestinationId,
+      },
     });
   };
 
@@ -105,7 +97,6 @@ const BookingPage = () => {
           <p>Price: {price} / day</p>
         </div>
 
-        {/* Show loading state or error if necessary */}
         {loading && <p>Loading user profile...</p>}
         {error && <p>{error}</p>}
 
@@ -141,7 +132,6 @@ const BookingPage = () => {
               name="numberOfPeople"
               value={formData.numberOfPeople}
               onChange={handleInputChange}
-              min="1"
               required
             />
           </div>
@@ -152,11 +142,20 @@ const BookingPage = () => {
               name="specialRequests"
               value={formData.specialRequests}
               onChange={handleInputChange}
-              rows="4"
-            ></textarea>
+            />
           </div>
-
-          <button type="submit" className="submit-btn">Confirm Booking</button>
+          <div className="form-group">
+            <label htmlFor="travelDate">Travel Date:</label>
+            <input
+              type="date"
+              id="travelDate"
+              name="travelDate"
+              value={formData.travelDate}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <button type="submit" className="submit-btn">Proceed to Payment</button>
         </form>
       </div>
     </div>
