@@ -123,7 +123,7 @@ const UserProfile = () => {
               <tbody>
                 {bookings.map((booking, index) => (
                   <tr key={index}>
-                    <td>{booking.Tour}</td> {/* Correct field names from API */}
+                    <td>{booking.DestinationId}</td> {/* Correct field names from API */}
                     <td>{booking.Departure}</td>
                     <td>{booking.BookingDate}</td>
                     <td>{booking.Status}</td>

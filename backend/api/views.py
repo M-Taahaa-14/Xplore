@@ -214,13 +214,14 @@ class AddBookingView(APIView):
 
 @api_view(['GET'])
 def get_user_bookings(request):
-    username = request.GET.get('username')  # Fetch username from query params
-    if not username:
+    email = request.GET.get('username')  # Fetch username from query params
+    print(email)
+    if not email:
         return Response({'error': 'Username is required'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         # Filter bookings by username
-        bookings = Booking.objects.filter(User=username)
+        bookings = Booking.objects.filter(UserEmail=email)
         if not bookings.exists():
             return Response({'message': 'No bookings found for this user'}, status=status.HTTP_404_NOT_FOUND)
 
