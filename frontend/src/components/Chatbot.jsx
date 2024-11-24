@@ -1,81 +1,126 @@
-// const express = require('express');
-// const bodyParser = require('body-parser');
-// const axios = require('axios');
-// const app = express();
+// src/components/Chat.jsx
+import React, { useState, useRef, useEffect } from 'react';
+import './Chatbot.css';
 
-// app.use(bodyParser.json());
+const Chat = () => {
+    const [messages, setMessages] = useState([]);
+    const [inputMessage, setInputMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const chatContainerRef = useRef(null);
 
-// app.post('/api/open-gemini', async (req, res) => {
-//   const { question } = req.body;
+    const quickActions = [
+        "Tell me about the latest AI developments",
+        "How can I improve my productivity?",
+        "Give me some learning resources",
+        "Help me with problem-solving"
+    ];
 
-//   if (!question) {
-//     return res.status(400).json({ error: 'No question provided' });
-//   }
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
 
-//   try {
-//     // Make sure this API endpoint and body format are correct as per OpenGemini API documentation
-//     const response = await axios.post('https://api.opengemini.com', {
-//       query: question,
-//       // You may need to add authentication, headers, or other parameters
-//     });
+    const handleSend = async (message = inputMessage) => {
+        if (!message.trim()) return;
 
-//     // Assuming the response contains an 'answer' field. Adjust as per the actual API response.
-//     const answer = response.data.answer;  
-//     res.json({ answer });
-//   } catch (error) {
-//     // Log the error for debugging
-//     console.error(error);
-//     res.status(500).json({ error: 'Something went wrong', details: error.message });
-//   }
-// });
+        // Add user message to chat
+        setMessages(prev => [...prev, { text: message, isUser: true }]);
+        setInputMessage('');
+        setIsLoading(true);
 
-// app.listen(5000, () => {
-//   console.log('Server is running on http://localhost:5000');
-// });
+        try {
+            const response = await fetch('http://localhost:8000/api/chat/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
 
+            const data = await response.json();
+            
+            if (data.error) {
+                setMessages(prev => [...prev, { text: `Error: ${data.error}`, isUser: false }]);
+            } else {
+                setMessages(prev => [...prev, { text: data.response, isUser: false }]);
+            }
+        } catch (error) {
+            setMessages(prev => [...prev, { 
+                text: 'Error: Unable to connect to the server', 
+                isUser: false 
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-// // import React, { useState } from 'react';
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSend();
+        }
+    };
 
-// // const AIChatbot = () => {
-// //   const [messages, setMessages] = useState([]);
-// //   const [userMessage, setUserMessage] = useState("");
+    return (
+        <div className="main-container">
+            <div className="chat-interface">
+                <div className="header">
+                    <h1>AI Assistant</h1>
+                    <p className="subtitle">Your personal AI companion for daily tasks and information</p>
+                </div>
 
-// //   const sendMessage = async () => {
-// //     const newMessages = [...messages, { user: "You", text: userMessage }];
-// //     setMessages(newMessages);
-// //     setUserMessage("");
+                <div className="quick-actions">
+                    {quickActions.map((action, index) => (
+                        <button 
+                            key={index} 
+                            onClick={() => handleSend(action)}
+                            disabled={isLoading}
+                        >
+                            {action}
+                        </button>
+                    ))}
+                </div>
 
-// //     // Call the OpenGeminiAPI here to get the response
-// //     const response = await fetch('/api/open-gemini', {
-// //       method: 'POST',
-// //       body: JSON.stringify({ question: userMessage }),
-// //       headers: { 'Content-Type': 'application/json' },
-// //     });
-// //     const data = await response.json();
-// //     setMessages([...newMessages, { user: "AI", text: data.answer }]);
-// //   };
+                <div className="chat-container" ref={chatContainerRef}>
+                    {messages.map((message, index) => (
+                        <div 
+                            key={index} 
+                            className={`message ${message.isUser ? 'user-message' : 'ai-message'}`}
+                        >
+                            {message.text}
+                        </div>
+                    ))}
+                    {isLoading && (
+                        <div className="message ai-message loading">
+                            <div className="loading-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    )}
+                </div>
 
-// //   return (
-// //     <div className="chatbot-container">
-// //       <div className="chatbot-header">
-// //         <h4>Ask me anything about your next tour!</h4>
-// //       </div>
-// //       <div className="chatbot-messages">
-// //         {messages.map((msg, idx) => (
-// //           <div key={idx} className={`message ${msg.user}`}>
-// //             <p>{msg.text}</p>
-// //           </div>
-// //         ))}
-// //       </div>
-// //       <input
-// //         type="text"
-// //         value={userMessage}
-// //         onChange={(e) => setUserMessage(e.target.value)}
-// //         placeholder="Ask me about a tour..."
-// //       />
-// //       <button onClick={sendMessage}>Send</button>
-// //     </div>
-// //   );
-// // };
+                <div className="input-container">
+                    <textarea
+                        value={inputMessage}
+                        onChange={(e) => setInputMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder="Type your message here..."
+                        disabled={isLoading}
+                        rows="2"
+                    />
+                    <button 
+                        onClick={() => handleSend()} 
+                        disabled={isLoading || !inputMessage.trim()}
+                    >
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
-// // export default AIChatbot;
+export default Chat;

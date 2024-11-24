@@ -399,35 +399,68 @@ def get_departure_dates(request):
         return Response({'error': 'Destination not found'}, status=status.HTTP_404_NOT_FOUND)
     
 
-    import requests
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+# chat/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from .models import ChatSession, Message
+from .serializers import ChatSessionSerializer, MessageSerializer
+from .services import AIService
 
-# OpenGeminiAPI endpoint URL (replace with the actual URL from the OpenGeminiAPI documentation)
-OPEN_GEMINI_API_URL = "https://api.opengemini.com/query"  # Change this to the correct API endpoint
+class ChatSessionView(APIView):
+    def get(self, request):
+        """Get all chat sessions"""
+        sessions = ChatSession.objects.all()
+        serializer = ChatSessionSerializer(sessions, many=True)
+        return Response(serializer.data)
 
-@csrf_exempt  # Disables CSRF validation for this view, typically used for API endpoints
-def ask_open_gemini(request):
-    if request.method == 'POST':
-        try:
-            # Parse the incoming JSON request body
-            data = json.loads(request.body)
-            question = data.get("question")
-            
-            # Make a request to the OpenGeminiAPI
-            if question:
-                response = requests.post(OPEN_GEMINI_API_URL, json={"query": question})
-                response_data = response.json()
-                
-                # Extract the answer from OpenGeminiAPI's response
-                answer = response_data.get("answer", "Sorry, I couldn't find an answer to your question.")
-                return JsonResponse({"answer": answer}, status=200)
-            else:
-                return JsonResponse({"error": "No question provided"}, status=400)
+    def post(self, request):
+        """Create a new chat session"""
+        session = ChatSession.objects.create(user=request.user if request.user.is_authenticated else None)
+        serializer = ChatSessionSerializer(session)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+class ChatMessageView(APIView):
+    def get(self, request, session_id):
+        """Get all messages in a chat session"""
+        session = get_object_or_404(ChatSession, id=session_id)
+        messages = Message.objects.filter(session=session)
+        serializer = MessageSerializer(messages, many=True)
+        return Response(serializer.data)
 
-    return JsonResponse({"error": "Invalid method. Use POST."}, status=405)
+    def post(self, request, session_id):
+        """Send a message and get AI response"""
+        session = get_object_or_404(ChatSession, id=session_id)
+        user_message = request.data.get('message', '').strip()
 
+        if not user_message:
+            return Response(
+                {'error': 'Message content is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Save user message
+        Message.objects.create(
+            session=session,
+            content=user_message,
+            is_user=True
+        )
+
+        # Get AI response
+        ai_service = AIService()
+        ai_response = ai_service.get_response(user_message)
+
+        # Save AI response
+        ai_message = Message.objects.create(
+            session=session,
+            content=ai_response,
+            is_user=False
+        )
+
+        # Update session's last interaction time
+        session.save()  # This updates last_interaction due to auto_now=True
+
+        return Response({
+            'message': MessageSerializer(ai_message).data
+        }, status=status.HTTP_201_CREATED)

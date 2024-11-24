@@ -113,3 +113,24 @@ class Wishlist(models.Model):
 
     class Meta:
         unique_together = ('user', 'tour')  # Ensure each user can only add a tour once to their wishlist
+
+# chat/models.py
+class ChatSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_interaction = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Chat Session {self.id} - {self.created_at}"
+
+class Message(models.Model):
+    session = models.ForeignKey('ChatSession', on_delete=models.CASCADE)
+    content = models.TextField()
+    is_user = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"{'User' if self.is_user else 'AI'} message in session {self.session_id}"  

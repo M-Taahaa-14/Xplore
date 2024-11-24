@@ -39,3 +39,19 @@ class DestinationSerializer(serializers.ModelSerializer):
             return os.path.join(settings.MEDIA_ROOT, obj.ImageURL)
             
         return None
+    
+    # chat/serializers.py
+from rest_framework import serializers
+from .models import ChatSession, Message
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = ['id', 'content', 'is_user', 'timestamp']
+
+class ChatSessionSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = ChatSession
+        fields = ['id', 'created_at', 'last_interaction', 'messages']

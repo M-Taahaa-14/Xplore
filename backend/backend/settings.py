@@ -2,6 +2,15 @@ import os
 from pathlib import Path
 from decouple import config
 
+
+# import os
+# from dotenv import load_dotenv
+
+# load_dotenv()  # Load environment variables from .env file
+
+# # Use environment variable instead of hardcoding
+# GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
 # Paths and directories
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,6 +40,7 @@ OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default=None)
 
 GOOGLEMAPS_API_KEY = config('GOOGLEMAPS_API_KEY', default=None)
 
+GEMINI_API_KEY = 'AIzaSyAR-TUYX5k6oU5lTS3eL_1rDL8SqZrTFNM'
 
 # Installed applications
 INSTALLED_APPS = [
