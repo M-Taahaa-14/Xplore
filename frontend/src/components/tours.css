@@ -130,10 +130,3 @@ nav ul li a.active {
 .overlay .wishlist:hover {
     background-color: #c62828;
 }
-
-footer {
-    background-color: #0d6c34;
-    color: white;
-    text-align: center;
-    padding: 0.5rem;
-}

@@ -499,11 +499,6 @@ class GeminiAIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
-
-
-
-
 class ChatSessionView(APIView):
     def get(self, request):
         """Get all chat sessions"""
