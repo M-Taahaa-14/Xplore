@@ -1,6 +1,6 @@
 # backend/api/serializers.py
 from rest_framework import serializers  # Correct import for serializers
-from .models import User, Booking, Destination
+from .models import User, Booking, Destination, Wishlist
 from django.conf import settings
 import os
 
@@ -39,6 +39,12 @@ class DestinationSerializer(serializers.ModelSerializer):
             return os.path.join(settings.MEDIA_ROOT, obj.ImageURL)
             
         return None
+    
+class WishlistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'user', 'des', 'added_on']
+        read_only_fields = ['added_on']
     
     # chat/serializers.py
 from rest_framework import serializers

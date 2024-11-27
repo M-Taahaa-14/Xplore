@@ -7,9 +7,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets
 from django.contrib.auth.hashers import make_password, check_password
 from .models import User, Tour, Booking, Wishlist, Destination
-from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer, DestinationSerializer
+from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer, DestinationSerializer, WishlistSerializer
 import requests
 from django.conf import settings
+from datetime import datetime
+import os
+from rest_framework.parsers import MultiPartParser
+from django.core.files.storage import default_storage
+
+
+
 
 # User Signup
 @api_view(['POST'])
@@ -268,26 +275,19 @@ class DestinationListView(APIView):
         return Response(serializer.data)
     
 
+class DestinationDetailView(APIView):
+    def get(self, request, DestinationId, format=None):
+        print("HELLO")
+        try:
+            
+            destination = Destination.objects.get(DestinationId=DestinationId)  # Fetch the destination by ID
+            serializer = DestinationSerializer(destination)
+            return Response(serializer.data)
+        except Destination.DoesNotExist:
+            return Response({"detail": "Destination not found."}, status=status.HTTP_404_NOT_FOUND)
 
-from datetime import datetime
-from django.conf import settings
-import os
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-from django.core.files.storage import default_storage
-from .serializers import DestinationSerializer
 
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-from datetime import datetime
-import os
-from django.core.files.storage import default_storage
-from django.conf import settings
-from .serializers import DestinationSerializer
-from .models import Destination
-from rest_framework import status
+
 
 
 class DestinationCreateView(APIView):
@@ -399,6 +399,55 @@ def get_departure_dates(request):
         return Response({'error': 'Destination not found'}, status=status.HTTP_404_NOT_FOUND)
     
 
+
+
+class WishlistView(APIView):
+    def get(self, request):
+        user_email = request.query_params.get('user')
+        print(user_email)
+        user_wishlist = Wishlist.objects.filter(user=user_email) 
+        serializer = WishlistSerializer(user_wishlist, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+    def post(self, request):
+        destination_id = request.data.get('destination')
+        curr_time = request.data.get('added_on')
+        user_email = request.data.get('user')  # Fetch the user email from the request data
+
+
+        # Check if the destination is already in the user's wishlist
+        existing_item = Wishlist.objects.filter(user=user_email, des=destination_id).first()
+        if existing_item:
+            return Response({"message": "This item is already in your wishlist."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a new wishlist item
+        wishlist_item = Wishlist.objects.create(user=user_email, des=destination_id, added_on=curr_time)
+        serializer = WishlistSerializer(wishlist_item)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request, pk):
+        user_email = request.query_params.get('user')  # Fetch the user email from the query parameters
+
+        wishlist_item = get_object_or_404(Wishlist, des=pk, user=user_email)
+        wishlist_item.delete()
+
+        return Response({"message": "Wishlist item removed successfully."}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def check_wishlist(request):
+    user_email = request.query_params.get('user')
+    destination_id = request.query_params.get('destination')
+    print(user_email)
+    print(destination_id)
+    
+    is_in_wishlist = Wishlist.objects.filter(user=user_email, des=destination_id).exists()
+    if is_in_wishlist:
+        return Response({"is_in_wishlist": is_in_wishlist}, status=status.HTTP_200_OK)
+    return Response({"detail": "User or destination not found."}, status=status.HTTP_404_NOT_FOUND)
+
 # chat/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -407,6 +456,53 @@ from django.shortcuts import get_object_or_404
 from .models import ChatSession, Message
 from .serializers import ChatSessionSerializer, MessageSerializer
 from .services import AIService
+
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+#from .services import AIService
+
+class GeminiAIView(APIView):
+    """
+    Class-based view to interact with Gemini AI for chat responses.
+    """
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests to get a response from Gemini AI.
+        """
+        user_message = request.data.get('message', '').strip()
+
+        if not user_message:
+            return Response(
+                {"error": "Message content is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # Initialize the AI service
+            ai_service = AIService()
+
+            # Get the AI response
+            ai_response = ai_service.get_response(user_message)
+
+            return Response(
+                {"response": ai_response},
+                status=status.HTTP_200_OK
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to get response: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
+
+
 
 class ChatSessionView(APIView):
     def get(self, request):

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./UserProfile.css";
-import EditProfileForm from "./EditProfileForm";
+import EditProfileForm from "./EditProfileForm"; // Assuming you have an EditProfileForm component
 import { useNavigate } from "react-router-dom";
 
 // Function to calculate the user's age based on their date of birth
@@ -21,6 +21,8 @@ const UserProfile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [bookings, setBookings] = useState([]);
   const [wishlist, setWishlist] = useState([]);
+  const [destinations, setDestinations] = useState({}); // New state to hold destination data
+  const [selectedDestination, setSelectedDestination] = useState(null); // State to store the currently selected destination
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   const loggedInEmail = localStorage.getItem("userEmail");
@@ -72,7 +74,7 @@ const UserProfile = () => {
 
   // Fetch user wishlist data from the backend API
   const fetchUserWishlist = async (email) => {
-    const response = await fetch(`http://127.0.0.1:8000/api/user-wishlist/?username=${email}`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/wishlist/?user=${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -82,10 +84,45 @@ const UserProfile = () => {
 
     if (response.ok) {
       const data = await response.json();
-      setWishlist(data.wishlist); // Assume 'wishlist' is the key in the response
+      setWishlist(data); // Directly set the wishlist data from the response
     } else {
       console.error("Failed to fetch wishlist");
     }
+  };
+
+  // Fetch a single destination data by its ID
+  const fetchDestinationDetails = async (id) => {
+    const response = await fetch(`http://127.0.0.1:8000/api/destinations/${id}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setDestinations((prevDestinations) => ({
+        ...prevDestinations,
+        [id]: data, // Save the destination details with the id as the key
+      }));
+    } else {
+      console.error("Failed to fetch destination details");
+    }
+  };
+
+  // Fetch destination details for all wishlist items
+  useEffect(() => {
+    wishlist.forEach((item) => {
+      if (!destinations[item.des]) {
+        fetchDestinationDetails(item.des); // Fetch details for each destination in wishlist if not already fetched
+      }
+    });
+  }, [wishlist, destinations]);
+
+  // Handle the click event to show details of the selected destination
+  const handleDestinationClick = (id) => {
+    setSelectedDestination(destinations[id]); // Set the selected destination from the state
   };
 
   return (
@@ -127,7 +164,13 @@ const UserProfile = () => {
                 {bookings.map((booking, index) => (
                   <tr key={index}>
                     <td>{booking.DestinationId}</td>
-                    <td>{booking.Departure}</td>
+                    <td>
+                      {destinations[booking.DestinationId] ? (
+                        destinations[booking.DestinationId].Name
+                      ) : (
+                        "Loading..."
+                      )}
+                    </td> {/* Get the destination name */}
                     <td>{booking.BookingDate}</td>
                     <td>{booking.Status}</td>
                     <td>{booking.TravelDate}</td>
@@ -149,21 +192,36 @@ const UserProfile = () => {
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Destination Name</th>
                   <th>Region</th>
                   <th>Location</th>
-                  <th>Action</th>
+                  <th>Price</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Image</th>
                 </tr>
               </thead>
               <tbody>
                 {wishlist.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.name}</td>
-                    <td>{item.region}</td>
-                    <td>{item.location}</td>
+                    <td onClick={() => handleDestinationClick(item.des)}>
+                      {destinations[item.des] ? destinations[item.des].Name : "Loading..."}
+                    </td>
+                    <td>{destinations[item.des] ? destinations[item.des].Region : "Loading..."}</td>
+                    <td>{destinations[item.des] ? destinations[item.des].Location : "Loading..."}</td>
+                    <td>{destinations[item.des] ? destinations[item.des].Price : "Loading..."}</td>
+                    <td>{destinations[item.des] ? destinations[item.des].StartDate : "Loading..."}</td>
+                    <td>{destinations[item.des] ? destinations[item.des].EndDate : "Loading..."}</td>
                     <td>
-                      <button onClick={() => alert("Booking Item")}>Book</button>
-                      <button onClick={() => alert("Remove Item")}>Remove</button>
+                      {destinations[item.des] && destinations[item.des].Image ? (
+                        <img
+                          src={`http://127.0.0.1:8000${destinations[item.des].Image}`}
+                          alt={destinations[item.des].Name}
+                          style={{ width: "100px" }}
+                        />
+                      ) : (
+                        "Loading..."
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -172,15 +230,25 @@ const UserProfile = () => {
           )}
         </section>
 
-        {/* Edit Profile Form */}
-        {isEditProfileOpen && (
-          <EditProfileForm
-            userProfile={userProfile}
-            onClose={() => setIsEditProfileOpen(false)}
-            onUpdate={(updatedProfile) => setUserProfile(updatedProfile)}
-            refreshProfile={() => fetchUserProfile(loggedInEmail)}
-          />
+        {/* Display the selected destination details below the wishlist */}
+        {selectedDestination && (
+          <section className="destination-details">
+            <h3>Destination Details</h3>
+            <p>Name: {selectedDestination.Name}</p>
+            <p>Region: {selectedDestination.Region}</p>
+            <p>Location: {selectedDestination.Location}</p>
+            <p>Price: {selectedDestination.Price}</p>
+            <p>Start Date: {selectedDestination.StartDate}</p>
+            <p>End Date: {selectedDestination.EndDate}</p>
+            <p>Nights: {selectedDestination.Nights}</p>
+            <p>Days: {selectedDestination.Days}</p>
+            <p>Google Maps Link: <a href={selectedDestination.GoogleMapsLink} target="_blank" rel="noopener noreferrer">View on Maps</a></p>
+            <img src={`http://127.0.0.1:8000${selectedDestination.Image}`} alt={selectedDestination.Name} />
+          </section>
         )}
+
+        {/* Edit Profile Form */}
+        {isEditProfileOpen && <EditProfileForm userProfile={userProfile} />}
       </div>
     </div>
   );

@@ -3,114 +3,140 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-// Fetch logged-in email once, outside of the component
-const loggedInEmail = localStorage.getItem("userEmail");
-
-const TourCard = ({ image, title, location, price, reviews, rating, loggedInEmail, DestinationId, startDate }) => {
+const Tours = () => {
+  const [destinations, setDestinations] = useState([]);
+  const [wishlistStatus, setWishlistStatus] = useState({});
+  const loggedInEmail = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
-  const addToWishlist = (tourName) => {
-    alert(`${tourName} has been added to your wishlist!`);
+  // Fetch destinations from the backend
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:8000/api/destinations/')
+      .then((response) => setDestinations(response.data))
+      .catch((error) => console.error("Error fetching destinations:", error));
+  }, []);
+
+  // Fetch wishlist status for each destination
+  useEffect(() => {
+    if (loggedInEmail && destinations.length > 0) {
+      destinations.forEach((destination) => {
+        if (!(destination.DestinationId in wishlistStatus)) {
+          checkIfInWishlist(destination.DestinationId);
+        }
+      });
+    }
+  }, [loggedInEmail, destinations]);
+
+  // Check if the destination is in the wishlist for the logged-in user
+  const checkIfInWishlist = (destinationId) => {
+    axios
+      .get('http://127.0.0.1:8000/api/wishlist/check/', {
+        params: {
+          user: loggedInEmail,
+          destination: destinationId,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const isWishlisted = response.data.is_in_wishlist;
+          setWishlistStatus((prevStatus) => ({
+            ...prevStatus,
+            [destinationId]: isWishlisted === true,
+          }));
+          console.log(`Wishlist status for Destination ${destinationId}:`, isWishlisted);
+        }
+      })
+      .catch((error) => {
+        console.error(`Error checking wishlist status for Destination ${destinationId}:`, error);
+        setWishlistStatus((prevStatus) => ({
+          ...prevStatus,
+          [destinationId]: false,
+        }));
+      });
   };
 
-  const handleBookNow = () => {
-    // Navigate to the booking page with the tour details, user details, and DestinationId
+  // Toggle wishlist: add or remove
+  const toggleWishlist = (destinationId, isWishlisted) => {
+    const currentDateTime = new Date().toISOString();
+
+    if (isWishlisted) {
+      axios
+        .delete(`http://127.0.0.1:8000/api/wishlist/${destinationId}/`, {
+          params: { user: loggedInEmail },
+        })
+        .then(() => {
+          setWishlistStatus((prevStatus) => ({
+            ...prevStatus,
+            [destinationId]: false,
+          }));
+        })
+        .catch((error) => console.error("Error removing from wishlist:", error));
+    } else {
+      axios
+        .post('http://127.0.0.1:8000/api/wishlist/', {
+          user: loggedInEmail,
+          destination: destinationId,
+          added_on: currentDateTime,
+        })
+        .then(() => {
+          setWishlistStatus((prevStatus) => ({
+            ...prevStatus,
+            [destinationId]: true,
+          }));
+        })
+        .catch((error) => console.error("Error adding to wishlist:", error));
+    }
+  };
+
+  // Handle booking navigation
+  const handleBookNow = (destination) => {
     navigate('/booking', {
-      state: { 
-        title, 
-        location, 
-        price, 
-        image, 
-        loggedInEmail, // Pass the user details (email in this case)
-        DestinationId,  // Pass the DestinationId
-        startDate,
+      state: {
+        title: destination.Name,
+        location: destination.Location,
+        price: destination.Price,
+        image: `http://127.0.0.1:8000${destination.Image}`,
+        loggedInEmail,
+        DestinationId: destination.DestinationId,
+        startDate: destination.StartDate,
       },
     });
   };
 
   return (
-    <div className="card">
-      <img src={image} alt={`Image of ${title}`} />
-      <h3>{title}</h3>
-      <p>{location}</p>
-      <p>from {price} / day</p>
-      <p>{rating} ({reviews} Reviews)</p>
-      <div className="overlay">
-        <button className="book-now" onClick={handleBookNow}>
-          Book Now📅
-        </button>
-        <span className="wishlist" onClick={() => addToWishlist(title)}>
-          🤍💌
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const Tours = () => {
-  const [destinations, setDestinations] = useState([]);
-  const [userDetails, setUserDetails] = useState(null); // State to store user details
-  const navigate = useNavigate();
-
-  // Fetch destinations from the backend
-  useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/destinations/')
-      .then(response => {
-        setDestinations(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching destinations:", error);
-      });
-  }, []);
-
-  // Fetch user details based on the logged-in email when the component mounts
-  useEffect(() => {
-    if (loggedInEmail) {
-      axios.get(`http://127.0.0.1:8000/api/user-profile/${loggedInEmail}/`)
-        .then(response => {
-          setUserDetails(response.data); // Set the user details in the state
-        })
-        .catch(error => {
-          console.error("Error fetching user details:", error);
-        });
-    }
-  }, [loggedInEmail]);
-
-  // Display NULL if no email is found
-  const displayEmail = loggedInEmail ? loggedInEmail : 'NULL';
-
-  return (
     <div>
-      <section className="user-info">
-        {/* Display the logged-in user's email or NULL if not found */}
-        {/* <p>Email: {displayEmail}</p> */}
-        {/* Display user details if they exist */}
-        {userDetails && (
-          <div>
-            <p>Name: {userDetails.name || 'Not Available'}</p>
-            <p>Phone: {userDetails.phone || 'Not Available'}</p>
-            <p>Address: {userDetails.address || 'Not Available'}</p>
-          </div>
-        )}
-      </section>
-
       <section className="featured-liveaboards">
         <h2>Tours</h2>
         <div className="liveaboard-cards">
-          {destinations.map((destination, index) => (
-            <TourCard
-              key={index}
-              image={`http://127.0.0.1:8000${destination.Image}`} // Assuming ImageURL contains the correct URL
-              title={destination.Name}
-              location={destination.Location}
-              price={destination.Price}
-              reviews={destination.reviews || 0} // Default to 0 if no reviews
-              rating={destination.rating || 'N/A'} // Default to 'N/A' if no rating
-              loggedInEmail={loggedInEmail} // Pass loggedInEmail to TourCard
-              DestinationId={destination.DestinationId} // Pass DestinationId to TourCard
-              startDate={destination.startDate || ''} // Pass startDate (if available) to TourCard
-            />
-          ))}
+          {destinations.map((destination) => {
+            const wishlisted = wishlistStatus[destination.DestinationId] ?? false;
+
+            return (
+              <div key={destination.DestinationId} className="card">
+                <img
+                  src={`http://127.0.0.1:8000${destination.Image}`}
+                  alt={`Image of ${destination.Name}`}
+                />
+                <h3>{destination.Name}</h3>
+                <p>{destination.Location}</p>
+                <p>from {destination.Price} / day</p>
+                <p>{destination.rating || 'N/A'} ({destination.reviews || 0} Reviews)</p>
+
+                <div className="overlay">
+                  <button className="book-now" onClick={() => handleBookNow(destination)}>
+                    Book Now📅
+                  </button>
+                  <span
+                    className="wishlist"
+                    onClick={() => toggleWishlist(destination.DestinationId, wishlisted)}
+                  >
+                    {wishlisted ? '💔 Remove from Wishlist' : '🤍 Add to Wishlist'}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>
