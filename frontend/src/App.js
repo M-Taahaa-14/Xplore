@@ -33,241 +33,235 @@ import Privacy from './components/PrivacyPolicy.jsx';
 import MyBookings from './components/MyBookings.jsx';
 import Chatbot from './components/Chatbot.jsx';
 import AdminQueryResponse from './components/AdminQueryResponse.jsx';
-
 // Layout Components
 const UserLayout = ({ children }) => (
-  <div className="layout-container">
+  <>
     <Sidebar />
-    <div className="content">
-      <main>{children}</main>
-    </div>
+    {/* <Header /> */}
+    <main>{children}</main>
     <Footer />
-  </div>
+  </>
 );
 
 const AdminLayout = ({ children }) => (
-  <div className="layout-container">
+  <>
     <SideBar />
-    <div className="content">
-      <main>{children}</main>
-    </div>
-  </div>
+    <main>{children}</main>
+  </>
 );
 
 const App = () => {
   return (
     <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
 
-          {/* Admin routes */}
-          <Route
-            path="/admin"
-            element={
-              <AdminLayout>
-                <AdminDashboard />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/managebookings"
-            element={
-              <AdminLayout>
-                <ManageBookings />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/managedestinations"
-            element={
-              <AdminLayout>
-                <ManageDestinations />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/managetours"
-            element={
-              <AdminLayout>
-                <ManageTours />
-              </AdminLayout>
-            }
-          />
-          <Route
-            path="/AdminQuery"
-            element={
-              <AdminLayout>
-                <AdminQueryResponse />
-              </AdminLayout>
-            }
-          />
-          {/* User routes */}
-          <Route
-            path="/home"
-            element={
-              <UserLayout>
-                <Home />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/tours"
-            element={
-              <UserLayout>
-                <Tours />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/trek"
-            element={
-              <UserLayout>
-                <Trek />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/Chatbot"
-            element={
-              <UserLayout>
-                <Chatbot />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/feedback"
-            element={
-              <UserLayout>
-                <Feedback />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/faqs"
-            element={
-              <UserLayout>
-                <FAQs />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/aboutus"
-            element={
-              <UserLayout>
-                <AboutUs />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/userprofile"
-            element={
-              <UserLayout>
-                <UserProfile />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/contactus"
-            element={
-              <UserLayout>
-                <ContactUs />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/signnew"
-            element={
-              <UserLayout>
-                <SignNew />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/tourguide"
-            element={
-              <UserLayout>
-                <TourGuide />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/termsofservice"
-            element={
-              <UserLayout>
-                <TermsOfService />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/booking"
-            element={
-              <UserLayout>
-                <BookingPage />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/payment"
-            element={
-              <UserLayout>
-                <PaymentPage />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/weather"
-            element={
-              <UserLayout>
-                <WeatherForecast />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/review"
-            element={
-              <UserLayout>
-                <Review />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <UserLayout>
-                <Chatbox />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/car"
-            element={
-              <UserLayout>
-                <CarRental />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/privacypolicy"
-            element={
-              <UserLayout>
-                <Privacy />
-              </UserLayout>
-            }
-          />
-          <Route
-            path="/MyBookings"
-            element={
-              <UserLayout>
-                <MyBookings />
-              </UserLayout>
-            }
-          />
-          {/* Default route */}
-          <Route path="*" element={<Login />} />
-        </Routes>
-      </div>
+        {/* Admin routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managebookings"
+          element={
+            <AdminLayout>
+              <ManageBookings />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managedestinations"
+          element={
+            <AdminLayout>
+              <ManageDestinations />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/managetours"
+          element={
+            <AdminLayout>
+              <ManageTours />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/AdminQuery"
+          element={
+            <AdminLayout>
+              <AdminQueryResponse />
+            </AdminLayout>
+          }
+        />
+        {/* User routes */}
+        <Route
+          path="/home"
+          element={
+            <UserLayout>
+              <Home />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/tours"
+          element={
+            <UserLayout>
+              <Tours />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/trek"
+          element={
+            <UserLayout>
+              <Trek />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/Chatbot"
+          element={
+            <UserLayout>
+              <Chatbot />
+            </UserLayout>
+          }
+        />        
+        <Route
+          path="/feedback"
+          element={
+            <UserLayout>
+              <Feedback />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/faqs"
+          element={
+            <UserLayout>
+              <FAQs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/aboutus"
+          element={
+            <UserLayout>
+              <AboutUs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/userprofile"
+          element={
+            <UserLayout>
+              <UserProfile />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/contactus"
+          element={
+            <UserLayout>
+              <ContactUs />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/signnew"
+          element={
+            <UserLayout>
+              <SignNew />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/tourguide"
+          element={
+            <UserLayout>
+              <TourGuide />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/termsofservice"
+          element={
+            <UserLayout>
+              <TermsOfService />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/booking"
+          element={
+            <UserLayout>
+              <BookingPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <UserLayout>
+              <PaymentPage />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/weather"
+          element={
+            <UserLayout>
+              <WeatherForecast />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/review"
+          element={
+            <UserLayout>
+              <Review />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <UserLayout>
+              <Chatbox />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/car"
+          element={
+            <UserLayout>
+              <CarRental />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/privacypolicy"
+          element={
+            <UserLayout>
+              <Privacy />
+            </UserLayout>
+          }
+        />
+        <Route
+          path="/MyBookings"
+          element={
+            <UserLayout>
+              <MyBookings />
+            </UserLayout>
+          }
+        />
+        {/* Default route */}
+        <Route path="*" element={<Login />} />
+      </Routes>
     </Router>
   );
 };
