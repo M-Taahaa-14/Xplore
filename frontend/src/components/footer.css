@@ -1,8 +1,29 @@
+ /* Ensure the body and root take up full height */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* The container of the app (usually your root element) */
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Full viewport height */
+}
+
+/* The main content of the page (dynamic content) */
+.main-content {
+    flex: 1; /* This ensures the content takes up the remaining space */
+}
+
+ 
  footer {
          background-color: #0d6c34;
          color: white;
-         padding: 2rem 1rem;
- }
+         text-align: center;
+         padding: 0.5rem;
+     }
 
      .footer-content {
          display: flex;

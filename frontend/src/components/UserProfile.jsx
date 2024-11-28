@@ -247,8 +247,14 @@ const UserProfile = () => {
           </section>
         )}
 
-        {/* Edit Profile Form */}
-        {isEditProfileOpen && <EditProfileForm userProfile={userProfile} />}
+{isEditProfileOpen && (
+          <EditProfileForm
+            userProfile={userProfile}
+            onClose={() => setIsEditProfileOpen(false)}
+            onUpdate={(updatedProfile) => setUserProfile(updatedProfile)}
+            refreshProfile={() => fetchUserProfile(loggedInEmail)}
+          />
+        )}
       </div>
     </div>
   );
