@@ -47,9 +47,7 @@ class WishlistSerializer(serializers.ModelSerializer):
         read_only_fields = ['added_on']
     
     # chat/serializers.py
-from rest_framework import serializers
-from .models import ChatSession, Message
-
+"""
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
@@ -61,3 +59,5 @@ class ChatSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatSession
         fields = ['id', 'created_at', 'last_interaction', 'messages']
+
+"""

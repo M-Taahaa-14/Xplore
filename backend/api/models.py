@@ -1,6 +1,7 @@
 # backend/api/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from datetime import datetime
 
 
 class CustomUserManager(BaseUserManager):
@@ -54,7 +55,7 @@ class Destination(models.Model):
     Location = models.CharField(max_length=100)
     Latitude = models.FloatField(null=True, blank=True)
     Longitude = models.FloatField(null=True, blank=True)
-    GoogleMapsLink = models.URLField(max_length=1000, null=True, blank=True)
+    GoogleMapsLink = models.URLField(max_length=100, null=True, blank=True)
     Price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     MaxTravellers = models.IntegerField(null=True, blank=True)
     StartDate = models.DateField(null=True, blank=True)
@@ -75,19 +76,6 @@ class Destination(models.Model):
 
 
 
-
-
-class Tour(models.Model):
-    TourId = models.IntegerField(primary_key=True)
-    TourName = models.CharField(max_length=100)
-    Destination = models.ForeignKey(Destination, on_delete=models.CASCADE)
-    Price = models.DecimalField(max_digits=10, decimal_places=2)
-    MaxTravellers = models.IntegerField()
-    StartDate = models.DateField()
-    EndDate = models.DateField()
-    Nights = models.IntegerField()
-    Days = models.IntegerField()
-
 class Booking(models.Model):
     BookingId = models.AutoField(primary_key=True)
     UserEmail = models.EmailField(max_length=100 ,default='fahad@gamil.com')  # Store the user email
@@ -103,17 +91,20 @@ class Booking(models.Model):
         return f"Booking {self.BookingId} for {self.UserEmail} to {self.DestinationId}"
 
 
+# Define the function that returns the current date and time
+def get_default_added_on():
+    return datetime.now()
+
+# Your Wishlist model
 class Wishlist(models.Model):
-    user = models.EmailField(max_length=1000,default="")
-    des = models.IntegerField(default="")
-    added_on = models.DateTimeField(auto_now_add=True)
+    user = models.EmailField(max_length=191, default="user@gmail.com")
+    des = models.IntegerField(default=0)
+    added_on = models.DateTimeField(default=get_default_added_on)  # Reference the function
 
     def __str__(self):
         return self.user
-    class Meta:
-        unique_together = ('user', 'des')  # Ensure each user can only add a tour once to their wishlist
 
-
+"""
     
 # chat/models.py
 class ChatSession(models.Model):
@@ -135,3 +126,6 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{'User' if self.is_user else 'AI'} message in session {self.session_id}"  
+
+        
+"""

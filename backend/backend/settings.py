@@ -40,7 +40,7 @@ OPENWEATHER_API_KEY = config('OPENWEATHER_API_KEY', default=None)
 
 GOOGLEMAPS_API_KEY = config('GOOGLEMAPS_API_KEY', default=None)
 
-GEMINI_API_KEY = 'AIzaSyAR-TUYX5k6oU5lTS3eL_1rDL8SqZrTFNM'
+GEMINI_API_KEY = config('GEMINI_API_KEY', default=None)
 
 # Installed applications
 INSTALLED_APPS = [

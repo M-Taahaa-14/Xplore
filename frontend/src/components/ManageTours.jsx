@@ -1,277 +1,237 @@
-import React, { useState, useEffect } from 'react';
-import './ManageTours.css';
+import React, { useEffect, useState } from 'react';
+import './ManageDestinations.css';
 
-const ManageTours = () => {
-    const [tours, setTours] = useState([
-        {
-            TourId: 1,
-            TourName: 'Romantic Paris',
-            DestinationName: 'Paris',
-            Price: 1200,
-            MaxTravellers: 10,
-            StartDate: '2024-10-20',
-            EndDate: '2024-10-25',
-            Nights: 5,
-            Days: 6,
-        },
-        {
-            TourId: 2,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 3,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 4,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 5,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 6,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 7,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-        {
-            TourId: 8,
-            TourName: 'Adventure in Tokyo',
-            DestinationName: 'Tokyo',
-            Price: 1800,
-            MaxTravellers: 8,
-            StartDate: '2024-11-01',
-            EndDate: '2024-11-07',
-            Nights: 6,
-            Days: 7,
-        },
-    ]);
-
-    const [tourDetails, setTourDetails] = useState({
-        tourName: '',
-        destinationId: '',
-        price: '',
-        maxTravellers: '',
-        startDate: '',
-        endDate: '',
-        nights: '',
-        days: '',
+const ManageDestinations = () => {
+    const [destinations, setDestinations] = useState([]);
+    const [newDestination, setNewDestination] = useState({
+        Name: '',
+        Region: '',
+        Location: '',
+        Latitude: '',
+        Longitude: '',
+        Price: '',
+        MaxTravellers: '',
+        StartDate: '',
+        EndDate: '',
+        Image: null,
     });
 
-    const [destinations, setDestinations] = useState([]);
-
     useEffect(() => {
-        loadDestinations();
+        // Fetch existing destinations from the backend
+        fetch('http://127.0.0.1:8000/api/destinations/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch destinations');
+                }
+                return response.json();
+            })
+            .then(data => setDestinations(data))
+            .catch(error => console.error('Error fetching destinations:', error));
     }, []);
-
-    const loadDestinations = async () => {
-        // Mock fetching destinations
-        const data = [
-            { DestinationId: 1, Name: 'Paris' },
-            { DestinationId: 2, Name: 'Tokyo' },
-            { DestinationId: 3, Name: 'New York' },
-        ];
-        setDestinations(data);
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setTourDetails({ ...tourDetails, [name]: value });
+        setNewDestination({ ...newDestination, [name]: value });
     };
 
-    const addTour = async (e) => {
-        e.preventDefault();
-        setTours([...tours, { ...tourDetails, TourId: tours.length + 1 }]);
-        // Clear form
-        setTourDetails({
-            tourName: '',
-            destinationId: '',
-            price: '',
-            maxTravellers: '',
-            startDate: '',
-            endDate: '',
-            nights: '',
-            days: '',
+    const handleFileChange = (e) => {
+        setNewDestination({ ...newDestination, Image: e.target.files[0] });
+    };
+
+    const handleAddDestination = () => {
+        const formData = new FormData();
+
+        // Append all fields to FormData, including the image
+        Object.keys(newDestination).forEach((key) => {
+            if (newDestination[key]) {
+                formData.append(key, newDestination[key]);
+            }
         });
+
+        // POST request to the backend to add the new destination
+        fetch('http://127.0.0.1:8000/api/destinations/add/', {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add destination');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setDestinations([...destinations, data]);
+                setNewDestination({
+                    Name: '',
+                    Region: '',
+                    Location: '',
+                    Latitude: '',
+                    Longitude: '',
+                    Price: '',
+                    MaxTravellers: '',
+                    StartDate: '',
+                    EndDate: '',
+                    Image: null,
+                });
+            })
+            .catch(error => console.error('Error adding destination:', error));
     };
 
-    const deleteTour = (tourId) => {
-        setTours(tours.filter(tour => tour.TourId !== tourId));
+    const handleDeleteDestination = (id) => {
+        fetch(`http://127.0.0.1:8000/api/destinations/delete/${id}/`, { method: 'DELETE' })
+            .then(() => {
+                setDestinations(destinations.filter(destination => destination.DestinationId !== id));
+            })
+            .catch(error => console.error('Error deleting destination:', error));
     };
 
     return (
-        <div className="manage-tours">
-            <div className="container">
-                <h2>Manage Tours</h2>
+        <div style={{ display: 'flex' }}>
+            <div style={styles.container}>
+                <h2>Manage Destinations</h2>
                 <div className="grid-section">
-                    <h3>Existing Tours</h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Tour ID</th>
-                                <th>Tour Name</th>
-                                <th>Destination</th>
-                                <th>Price</th>
-                                <th>Max Travellers</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Nights</th>
-                                <th>Days</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tours.map(tour => (
-                                <tr key={tour.TourId}>
-                                    <td>{tour.TourId}</td>
-                                    <td>{tour.TourName}</td>
-                                    <td>{tour.DestinationName}</td>
-                                    <td>{tour.Price}</td>
-                                    <td>{tour.MaxTravellers}</td>
-                                    <td>{new Date(tour.StartDate).toLocaleDateString()}</td>
-                                    <td>{new Date(tour.EndDate).toLocaleDateString()}</td>
-                                    <td>{tour.Nights}</td>
-                                    <td>{tour.Days}</td>
-                                    <td>
-                                        <button onClick={() => deleteTour(tour.TourId)} className="btn delete">Delete</button>
-                                    </td>
+                    <h3>Existing Destinations</h3>
+                    <div className="table-container">
+                        <table style={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>Destination ID</th>
+                                    <th>Name</th>
+                                    <th>Region</th>
+                                    <th>Location</th>
+                                    <th>Price</th>
+                                    <th>Max Travellers</th>
+                                    <th>Nights</th>
+                                    <th>Days</th>
+                                    <th>Actions</th>
+                                    <th>Image</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {destinations.map(destination => (
+                                    <tr key={destination.DestinationId}>
+                                        <td>{destination.DestinationId}</td>
+                                        <td>{destination.Name}</td>
+                                        <td>{destination.Region}</td>
+                                        <td>{destination.Location}</td>
+                                        <td>{destination.Price}</td>
+                                        <td>{destination.MaxTravellers}</td>
+                                        <td>{destination.Nights}</td>
+                                        <td>{destination.Days}</td>
+                                        <td>
+                                            <button onClick={() => handleDeleteDestination(destination.DestinationId)} className="btn delete">Delete</button>
+                                        </td>
+                                        <td>
+                                            {destination.Image && (
+                                                <img 
+                                                    src={`http://127.0.0.1:8000${destination.Image}`} 
+                                                    alt="Destination" 
+                                                    style={styles.image}  
+                                                />
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div className="form-section">
-                    <h3>Add New Tour</h3>
-                    <form onSubmit={addTour}>
-                        <label>Tour Name: </label>
-                        <input
-                            type="text"
-                            name="tourName"
-                            placeholder="Enter Tour Name"
-                            value={tourDetails.tourName}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>Destination: </label>
-                        <select
-                            name="destinationId"
-                            value={tourDetails.destinationId}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Select Destination</option>
-                            {destinations.map(dest => (
-                                <option key={dest.DestinationId} value={dest.DestinationId}>
-                                    {dest.Name}
-                                </option>
-                            ))}
-                        </select>
-                        <label>Price: </label>
-                        <input
-                            type="number"
-                            name="price"
-                            placeholder="Enter Tour Price"
-                            value={tourDetails.price}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>Maximum Travellers: </label>
-                        <input
-                            type="number"
-                            name="maxTravellers"
-                            placeholder="Max Travellers"
-                            value={tourDetails.maxTravellers}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>Start Date:</label>
-                        <input
-                            type="date"
-                            name="startDate"
-                            value={tourDetails.startDate}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>End Date:</label>
-                        <input
-                            type="date"
-                            name="endDate"
-                            value={tourDetails.endDate}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>Nights: </label>
-                        <input
-                            type="number"
-                            name="nights"
-                            placeholder="Nights"
-                            value={tourDetails.nights}
-                            onChange={handleChange}
-                            required
-                        />
-                        <label>Days: </label>
-                        <input
-                            type="number"
-                            name="days"
-                            placeholder="Days"
-                            value={tourDetails.days}
-                            onChange={handleChange}
-                            required
-                        />
-                        <button type="submit" className="btn">Add Tour</button>
-                    </form>
+                    <h3>Add New Destination</h3>
+                    <input 
+                        type="text" 
+                        name="Name" 
+                        placeholder="Name" 
+                        value={newDestination.Name} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="text" 
+                        name="Region" 
+                        placeholder="Region" 
+                        value={newDestination.Region} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="text" 
+                        name="Location" 
+                        placeholder="Location" 
+                        value={newDestination.Location} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="number" 
+                        name="Latitude" 
+                        placeholder="Latitude" 
+                        value={newDestination.Latitude} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="number" 
+                        name="Longitude" 
+                        placeholder="Longitude" 
+                        value={newDestination.Longitude} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="number" 
+                        name="Price" 
+                        placeholder="Price" 
+                        value={newDestination.Price} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="number" 
+                        name="MaxTravellers" 
+                        placeholder="Max Travellers" 
+                        value={newDestination.MaxTravellers} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="date" 
+                        name="StartDate" 
+                        value={newDestination.StartDate} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="date" 
+                        name="EndDate" 
+                        value={newDestination.EndDate} 
+                        onChange={handleChange} 
+                    />
+                    <input 
+                        type="file" 
+                        name="Image" 
+                        onChange={handleFileChange} 
+                    />
+                    <button onClick={handleAddDestination} className="btn">Add Destination</button>
                 </div>
             </div>
         </div>
-        
     );
 };
 
-export default ManageTours;
+const styles = {
+    container: {
+        width: '80%',
+        marginTop: '100px',
+        marginLeft: '200px',
+        background: '#fff',
+        padding: '20px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+    },
+    table: {
+        width: '100%',
+        borderCollapse: 'collapse',
+        marginBottom: '20px',
+    },
+    image: {
+        width: '150px',
+        height: '150px',
+        objectFit: 'cover',
+    },
+};
+
+export default ManageDestinations;

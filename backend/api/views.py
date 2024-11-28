@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status, viewsets
 from django.contrib.auth.hashers import make_password, check_password
-from .models import User, Tour, Booking, Wishlist, Destination
+from .models import User, Booking, Wishlist, Destination
 from .serializers import UserSerializer, BookingSerializer, BookingStatusUpdateSerializer, DestinationSerializer, WishlistSerializer
 import requests
 from django.conf import settings
@@ -14,6 +14,10 @@ from datetime import datetime
 import os
 from rest_framework.parsers import MultiPartParser
 from django.core.files.storage import default_storage
+from django.shortcuts import get_object_or_404
+import os
+import google.generativeai as genai
+
 
 
 
@@ -364,7 +368,7 @@ class DestinationDeleteView(APIView):
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Tour, Destination
+from .models import Destination
 from datetime import datetime
 
 # Fetch Departure Dates Based on Destination
@@ -448,12 +452,102 @@ def check_wishlist(request):
         return Response({"is_in_wishlist": is_in_wishlist}, status=status.HTTP_200_OK)
     return Response({"detail": "User or destination not found."}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+
+
+
+
+
+
+
+
+
+api_key2 = settings.GEMINI_API_KEY
+
+if not api_key2:
+    raise ValueError("GEMINI_API_KEY is not set. Please set the API key in your environment variables.")
+
+genai.configure(api_key=api_key2)  
+
+# Create the model with generation configuration
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 40,
+    "max_output_tokens": 8192,
+    "response_mime_type": "text/plain",
+}
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash-8b",
+    generation_config=generation_config,
+)
+
+
+
+
+
+"""
+
+def chat_view(request):
+    if request.method == "POST":
+        print("yae")
+        try:
+            print("hello")
+            # Parse the JSON body
+            
+            user_message = request.data.get("message", "").strip()
+
+            if not user_message:
+                return JsonResponse({"error": "Message is required."}, status=400)
+
+            # Start a chat session with the model
+            chat_session = model.start_chat(history=[])
+            response =  user_message
+            #chat_session.send_message(user_message)
+
+            if response:
+                return JsonResponse({"response": response.text}, status=200)
+            else:
+                return JsonResponse({"error": "No response from Gemini AI."}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    else:
+        return JsonResponse({"error": "Invalid request method."}, status=405)
+"""
+
+
+@api_view(['POST'])
+def chat_view(request):
+    if request.method == 'POST':
+        try:
+            # Get the user message from the request body
+            user_message = request.data.get('message', '').strip()
+            if not user_message:
+                return JsonResponse({"error": "Message is required."}, status=400)
+
+            # Start a chat session and get the response from the model
+            chat_session = model.start_chat(history=[])
+            response = chat_session.send_message(user_message)
+
+            if response:
+                return JsonResponse({"response": response.text}, status=200)
+            else:
+                return JsonResponse({"error": "No response from Gemini AI."}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request method."}, status=405)
+
+
+"""
 # chat/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import ChatSession, Message
+from .models import 
 from .serializers import ChatSessionSerializer, MessageSerializer
 from .services import AIService
 
@@ -465,14 +559,10 @@ from rest_framework import status
 #from .services import AIService
 
 class GeminiAIView(APIView):
-    """
-    Class-based view to interact with Gemini AI for chat responses.
-    """
+    
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests to get a response from Gemini AI.
-        """
+       
         user_message = request.data.get('message', '').strip()
 
         if not user_message:
@@ -499,34 +589,29 @@ class GeminiAIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
-
-
-
-
 class ChatSessionView(APIView):
     def get(self, request):
-        """Get all chat sessions"""
+        
         sessions = ChatSession.objects.all()
         serializer = ChatSessionSerializer(sessions, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        """Create a new chat session"""
+        
         session = ChatSession.objects.create(user=request.user if request.user.is_authenticated else None)
         serializer = ChatSessionSerializer(session)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ChatMessageView(APIView):
     def get(self, request, session_id):
-        """Get all messages in a chat session"""
+       
         session = get_object_or_404(ChatSession, id=session_id)
         messages = Message.objects.filter(session=session)
         serializer = MessageSerializer(messages, many=True)
         return Response(serializer.data)
 
     def post(self, request, session_id):
-        """Send a message and get AI response"""
+    
         session = get_object_or_404(ChatSession, id=session_id)
         user_message = request.data.get('message', '').strip()
 
@@ -560,3 +645,7 @@ class ChatMessageView(APIView):
         return Response({
             'message': MessageSerializer(ai_message).data
         }, status=status.HTTP_201_CREATED)
+
+        
+        
+"""
