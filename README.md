@@ -1,6 +1,6 @@
 # Xplore
 
-Xplore is a modern tour and travel web application built to make trip planning simple, interactive, and community-driven. This project is a complete rewrite and improvement over our previous project, **Taaha-Hikes** (which was based on the .NET Framework and ASPX pages). With Xplore, we leverage a full stack setup using Django&nbsp;![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white), React&nbsp;![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB), and MySQL&nbsp;![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white), which brings a more flexible, responsive, and scalable platform for travel enthusiasts.
+Xplore is a modern tour and travel web application built to make trip planning simple, interactive, and community-driven. This project is a complete rewrite and improvement over our previous project, **Taaha-Hikes** (which was based on the .NET Framework and ASPX pages). With Xplore, we leverage a full stack setup using ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white), ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB), and ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white), which brings a more flexible, responsive, and scalable platform for travel enthusiasts.
 
 ---
 
@@ -31,10 +31,9 @@ The project includes:
 
 ## Tech Stack
 
-- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) [Django](https://www.djangoproject.com/) (Backend)
-- ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) [React](https://react.dev/) (Frontend)
-- ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white) [MySQL](https://www.mysql.com/) (Database)
-- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) (optional for deployment)
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) 
+- ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) 
+- ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 - ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 - ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
