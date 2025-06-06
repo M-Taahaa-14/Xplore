@@ -1,8 +1,8 @@
 # Xplore
 
-Xplore is a modern tour and travel web application built to make trip planning simple, interactive, and community-driven. This project is a complete rewrite and improvement over our previous project, **Taaha-Hikes** (which was based on the .NET Framework and ASPX pages). With Xplore, we leverage a full stack setup using ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white), ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB), and ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white), which brings a more flexible, responsive, and scalable platform for travel enthusiasts.
+Xplore is a modern tour and travel web application built to make trip planning simple, interactive, and community-driven. This project is a complete rewrite and improvement over our previous project, **Taaha-Hikes** (which was based on the .NET Framework and ASPX pages). With Xplore, we leverage a full stack setup using ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white), ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB), ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white), which brings a more flexible, responsive, and scalable platform for travel enthusiasts.
 
----
+
 
 ## 🚩 About the Project
 
@@ -16,7 +16,7 @@ The project includes:
 - Complaint logger for reporting issues or harassment
 - Modern, responsive UI and smooth user experience
 
----
+
 
 ## Features
 
@@ -27,7 +27,7 @@ The project includes:
 - Share and discuss itineraries within the community
 - Secure user authentication and data management
 
----
+
 
 ## Tech Stack
 
@@ -38,7 +38,7 @@ The project includes:
 - ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 - ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 
----
+
 
 ## Want to Clone?
 
@@ -114,7 +114,7 @@ The project includes:
 
 Set up a MySQL database and user. Update your Django `.env` with the correct credentials.
 
----
+
 
 ## 📝 Usage
 
@@ -124,7 +124,7 @@ Set up a MySQL database and user. Update your Django `.env` with the correct cre
 - Plan custom itineraries and share them.
 - Report issues or harassment via the complaint logger.
 
----
+
 
 ## 📁 Project Structure
 
@@ -142,7 +142,7 @@ Xplore/
 └── README.md        # This file
 ```
 
----
+
 
 ## Contributing
 
@@ -154,13 +154,13 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 4. Push to your branch (`git push origin feature/your-feature`)
 5. Open a pull request
 
----
+
 
 ## 📜 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
----
+
 
 ## 📬 Contact
 
